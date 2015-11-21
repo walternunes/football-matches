@@ -3,12 +3,12 @@ package jnuneslab.com.footballmatches;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.format.Time;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,52 +18,64 @@ import java.text.SimpleDateFormat;
 /**
  * Created by Walter.
  */
-public class ScrollTabFragment extends Fragment {
+public final class ScrollTabFragment extends Fragment {
 
     public static final int NUM_PAGES = 5;
     public static final int TODAY_POSITION = 2;
 
-    public ViewPager mPagerHandler;
-    private PageScrollAdapter mPagerScrollAdapter;
+    private ScrollTabAdapter mPagerScrollAdapter;
     private MainActivityFragment[] viewFragments = new MainActivityFragment[NUM_PAGES];
+    private ViewPager mViewPager;
+    private TabLayout mTabLayout;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
-    {
-        View rootView = inflater.inflate(R.layout.fragment_scroll_tab, container, false);
-        mPagerHandler = (ViewPager) rootView.findViewById(R.id.pager);
-        mPagerScrollAdapter = new PageScrollAdapter(getChildFragmentManager());
-        for (int i = 0;i < NUM_PAGES;i++)
-        {
-            // Create the fragments for each day of the week
-            viewFragments[i] = new MainActivityFragment();
-        }
-        mPagerHandler.setAdapter(mPagerScrollAdapter);
-        mPagerHandler.setCurrentItem(TODAY_POSITION);
-        return rootView;
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_scroll_tab, container, false);
     }
 
-    private class PageScrollAdapter extends FragmentStatePagerAdapter
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        //TODO check current state first
+
+        mPagerScrollAdapter = new ScrollTabAdapter( getChildFragmentManager());
+        mViewPager = (ViewPager) view.findViewById(R.id.pager);
+        mTabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
+
+        mTabLayout.setTabsFromPagerAdapter(mPagerScrollAdapter);
+
+
+        // TODO use listener to get current tab
+
+        for(int i = 0; i < NUM_PAGES; i++){
+            viewFragments[i] =  new MainActivityFragment();
+        }
+
+        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+        mViewPager.setOffscreenPageLimit(NUM_PAGES);
+        mViewPager.setAdapter(mPagerScrollAdapter);
+        mViewPager.setCurrentItem(TODAY_POSITION);
+    }
+
+    private class ScrollTabAdapter extends FragmentStatePagerAdapter
     {
 
         /**
          * Constructor
          * @param fm Fragment Mananger
          */
-        public PageScrollAdapter(FragmentManager fm)
-        {
+        public ScrollTabAdapter(FragmentManager fm){
             super(fm);
         }
 
         @Override
-        public android.support.v4.app.Fragment getItem(int i)
-        {
-            return viewFragments[i];
+        public Fragment getItem(int i){
+             return viewFragments[i];
         }
 
         @Override
-        public int getCount()
-        {
+        public int getCount(){
             return NUM_PAGES;
         }
 
@@ -91,7 +103,7 @@ public class ScrollTabFragment extends Fragment {
             int julianDay = Time.getJulianDay(dateInMillis, t.gmtoff);
             int currentJulianDay = Time.getJulianDay(System.currentTimeMillis(), t.gmtoff);
 
-            // Manual check to change the day text
+            // Manual check in order to change the day text
             if (julianDay == currentJulianDay) {
                 return context.getString(R.string.today);
             } else if ( julianDay == currentJulianDay +1 ){

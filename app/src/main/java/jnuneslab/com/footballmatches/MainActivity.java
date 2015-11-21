@@ -1,32 +1,32 @@
 package jnuneslab.com.footballmatches;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AbstractActivity {
 
-    private ScrollTabFragment scrollTab;
     public static int a = 2;
+    private ScrollTabFragment mScrollTabFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        if (savedInstanceState == null) {
-            scrollTab = new ScrollTabFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, scrollTab)
-                    .commit();
-        }
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
     }
 
     @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+         mScrollTabFragment = (ScrollTabFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_scores_pager);
+    }
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-
         // Html notation for action bar = e0ab2d
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
@@ -45,23 +45,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState)
-    {
-        outState.putInt("Pager_Current",scrollTab.mPagerHandler.getCurrentItem());
-        getSupportFragmentManager().putFragment(outState,"my_main",scrollTab);
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState)
-    {
-        a = savedInstanceState.getInt("Pager_Current");
-        scrollTab = (ScrollTabFragment) getSupportFragmentManager().getFragment(savedInstanceState,"my_main");
-        super.onRestoreInstanceState(savedInstanceState);
     }
 
 }
