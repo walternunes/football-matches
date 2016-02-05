@@ -9,6 +9,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/MainTheme" >
+        <provider android:name=".data.MatchesProvider" android:authorities="jnuneslab.com.footballmatches"/>
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >

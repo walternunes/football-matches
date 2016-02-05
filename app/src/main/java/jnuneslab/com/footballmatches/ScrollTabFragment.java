@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by Walter.
@@ -49,7 +50,10 @@ public final class ScrollTabFragment extends Fragment {
         // TODO use listener to get current tab
 
         for(int i = 0; i < NUM_PAGES; i++){
+            Date fragmentdate = new Date(System.currentTimeMillis()+((i-2)*86400000));
+            SimpleDateFormat mformat = new SimpleDateFormat("yyyy-MM-dd");
             viewFragments[i] =  new MainActivityFragment();
+            viewFragments[i].setFragmentDate(mformat.format(fragmentdate));
         }
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
@@ -91,7 +95,7 @@ public final class ScrollTabFragment extends Fragment {
         }
 
         /**
-         * Parameterized the date to get current day
+         * Parameterize the date to get current day
          * @param context - context of the application
          * @param dateInMillis - date in milliseconds of the current date
          * @return String - Contains the name of day
