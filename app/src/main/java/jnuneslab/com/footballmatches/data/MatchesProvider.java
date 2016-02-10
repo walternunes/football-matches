@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.util.Log;
 
@@ -25,9 +26,10 @@ public class MatchesProvider extends ContentProvider {
     private static final int MATCHES_WITH_LEAGUE = 101;
     private static final int MATCHES_WITH_ID = 102;
     private static final int MATCHES_WITH_DATE = 103;
+    private static final int LEAGUES = 104;
 
     // league = ?
-    private static final String SCORES_BY_LEAGUE = MatchesContract.MatchesEntry.COLUMN_LEAGUE + " = ?";
+    private static final String SCORES_BY_LEAGUE = MatchesContract.MatchesEntry.COLUMN_LEAGUE_KEY + " = ?";
 
     // date like ?
     private static final String SCORES_BY_DATE = MatchesContract.MatchesEntry.COLUMN_MATCH_DATE + " LIKE ?";
@@ -35,16 +37,32 @@ public class MatchesProvider extends ContentProvider {
     // match_id = ?
     private static final String SCORES_BY_ID = MatchesContract.MatchesEntry.COLUMN_MATCH_ID + " = ?";
 
-    /*
-        UriMatcher match each URI to the LEAGUE, MATCH_ID, MATCH_DATE
+    private static final SQLiteQueryBuilder sMatcheByLeagueQueryBuilder;
+
+    static {
+        sMatcheByLeagueQueryBuilder = new SQLiteQueryBuilder();
+
+        // matches INNER JOIN league ON matches.league_id = league._id
+        sMatcheByLeagueQueryBuilder.setTables(
+                MatchesContract.MatchesEntry.TABLE_NAME + " INNER JOIN " +
+                        MatchesContract.LeagueEntry.TABLE_NAME +
+                        " ON " + MatchesContract.MatchesEntry.TABLE_NAME +
+                        "." + MatchesContract.MatchesEntry.COLUMN_LEAGUE_KEY +
+                        " = " + MatchesContract.LeagueEntry.TABLE_NAME +
+                        "." + MatchesContract.LeagueEntry._ID);
+    }
+
+    /**
+     *  UriMatcher match each URI to the LEAGUE, MATCH_ID, MATCH_DATE
      */
     static UriMatcher buildUriMatcher() {
 
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = MatchesContract.BASE_CONTENT_URI.toString();
 
-        // create a corresponding code for each type of URI
+        // Create a corresponding code for each type of URI
         matcher.addURI(authority, null, MATCHES);
+        matcher.addURI(authority, "leagues", LEAGUES);
         matcher.addURI(authority, "league", MATCHES_WITH_LEAGUE);
         matcher.addURI(authority, "id", MATCHES_WITH_ID);
         matcher.addURI(authority, "date", MATCHES_WITH_DATE);
@@ -54,11 +72,12 @@ public class MatchesProvider extends ContentProvider {
 
     private int matchURI(Uri uri) {
         String link = uri.toString();
-
         if (link.contentEquals(MatchesContract.BASE_CONTENT_URI.toString())) {
             return MATCHES;
-        } else if (link.contentEquals(MatchesContract.MatchesEntry.buildScoreWithDate().toString())) {
-            return MATCHES_WITH_DATE;
+        } else if (link.contentEquals(MatchesContract.LeagueEntry.buildLeague().toString())) {
+            return LEAGUES;
+        }else if (link.contentEquals(MatchesContract.MatchesEntry.buildScoreWithDate().toString())) {
+                return MATCHES_WITH_DATE;
         } else if (link.contentEquals(MatchesContract.MatchesEntry.buildScoreWithId().toString())) {
             return MATCHES_WITH_ID;
         } else if (link.contentEquals(MatchesContract.MatchesEntry.buildScoreWithLeague().toString())) {
@@ -89,6 +108,8 @@ public class MatchesProvider extends ContentProvider {
         switch (match) {
             case MATCHES:
                 return MatchesContract.MatchesEntry.CONTENT_TYPE;
+            case LEAGUES:
+                return MatchesContract.LeagueEntry.CONTENT_TYPE;
             case MATCHES_WITH_LEAGUE:
                 return MatchesContract.MatchesEntry.CONTENT_TYPE;
             case MATCHES_WITH_ID:
@@ -108,24 +129,30 @@ public class MatchesProvider extends ContentProvider {
 
         switch (match) {
             case MATCHES:
-                retCursor = mOpenHelper.getReadableDatabase().query(
-                        MatchesContract.MatchesEntry.TABLE_NAME,
+                retCursor = sMatcheByLeagueQueryBuilder.query(
+                        mOpenHelper.getReadableDatabase(),
                         projection, null, null, null, null, sortOrder);
                 break;
-            case MATCHES_WITH_DATE:
+            case LEAGUES:
                 retCursor = mOpenHelper.getReadableDatabase().query(
-                        MatchesContract.MatchesEntry.TABLE_NAME,
+                        MatchesContract.LeagueEntry.TABLE_NAME,
+                        projection, null, selectionArgs, null, null, sortOrder);
+                break;
+            case MATCHES_WITH_DATE:
+                retCursor = sMatcheByLeagueQueryBuilder.query(
+                        mOpenHelper.getReadableDatabase(),
                         projection, SCORES_BY_DATE, selectionArgs, null, null, sortOrder);
                 break;
             case MATCHES_WITH_ID:
-                retCursor = mOpenHelper.getReadableDatabase().query(
-                        MatchesContract.MatchesEntry.TABLE_NAME,
+                retCursor = sMatcheByLeagueQueryBuilder.query(
+                        mOpenHelper.getReadableDatabase(),
                         projection, SCORES_BY_ID, selectionArgs, null, null, sortOrder);
                 break;
             case MATCHES_WITH_LEAGUE:
-                retCursor = mOpenHelper.getReadableDatabase().query(
-                        MatchesContract.MatchesEntry.TABLE_NAME,
-                        projection, SCORES_BY_LEAGUE, selectionArgs, null, null, sortOrder);
+                Log.v("fano", "fanol");
+                retCursor = sMatcheByLeagueQueryBuilder.query(
+                       mOpenHelper.getReadableDatabase(),
+                       projection, SCORES_BY_LEAGUE, selectionArgs, null, null, sortOrder);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown Uri" + uri);
@@ -144,11 +171,9 @@ public class MatchesProvider extends ContentProvider {
 
     @Override
     public int bulkInsert(Uri uri, ContentValues[] values) {
-        //Log.v(FetchScoreTask.LOG_TAG,String.valueOf(muriMatcher.match(uri)));
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 
         switch (matchURI(uri)) {
-
             case MATCHES:
                 db.beginTransaction();
                 int returnCount = 0;
@@ -175,7 +200,17 @@ public class MatchesProvider extends ContentProvider {
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
 
-        // Don't need to delete values
-        return 0;
+        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        int rowsDeleted;
+
+        // Delete all rows
+        switch (matchURI(uri)) {
+            case MATCHES:
+                rowsDeleted = db.delete(MatchesContract.MatchesEntry.TABLE_NAME, null, selectionArgs);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+        return rowsDeleted;
     }
 }

@@ -3,31 +3,31 @@ package jnuneslab.com.footballmatches;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.util.zip.Inflater;
 
 /**
  * Created by Walter on 23/11/2015.
  */
 public class ScoreAdapter  extends RecyclerView.Adapter<ScoreAdapter.ViewHolder> {
+
+    // Map columns
+    public static final int COL_ID = 1;
+    public static final int COL_MATCHDAY = 2;
+    public static final int COL_LEAGUE = 3;
+    public static final int COL_MATCHSTARTTIME = 4;
+    public static final int COL_MATCHLENGTH = 5;
     public static final int COL_HOME = 6;
     public static final int COL_AWAY = 7;
     public static final int COL_HOME_GOALS = 8;
     public static final int COL_AWAY_GOALS = 9;
-    public static final int COL_DATE = 1;
-    public static final int COL_LEAGUE = 5;
-    public static final int COL_MATCHDAY = 9;
-    public static final int COL_ID = 1;
-    public static final int COL_MATCHTIME = 4;
+    public static final int COL_LEAGUE_NAME = 11;
+
     public double detail_match_id = 0;
     private String FOOTBALL_SCORES_HASHTAG = "#Football_Scores";
 
@@ -75,18 +75,21 @@ public class ScoreAdapter  extends RecyclerView.Adapter<ScoreAdapter.ViewHolder>
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        Log.v("teste" , "test bindviewholder");
+        Log.v("teste", "test bindviewholder");
         //final ViewHolder mHolder = (ViewHolder) view.getTag();
         mCursor.moveToPosition(position);
-        holder.home_name.setText(mCursor.getString(COL_HOME));
-      //  Log.v(FetchScoreTask.LOG_TAG, "bind View inflated 1" + mCursor.getString(1) + " >2<" + mCursor.getString(2) + " >3<" + mCursor.getString(3) + " >4<" + mCursor.getString(4) + " >5<" + mCursor.getString(5) + " >6<" + mCursor.getString(6) + " >7<" + mCursor.getString(7) + " >8<" + mCursor.getString(8) + " >9<" + mCursor.getString(9)) ;
-        holder.away_name.setText(mCursor.getString(COL_AWAY));
-        holder.date.setText(mCursor.getString(COL_MATCHTIME));
-        holder.score.setText(Util.getScores(mCursor.getInt(COL_HOME_GOALS),mCursor.getInt(COL_AWAY_GOALS)));
+        holder.homeNameTxtView.setText(mCursor.getString(COL_HOME));
+        Log.v(FetchScoreTask.LOG_TAG, "bind View inflated 1><" + mCursor.getString(10) + " >2<" + mCursor.getString(2) + " >3<" + mCursor.getString(3) + " >4<" + mCursor.getString(4) + " >5<" + mCursor.getString(5) + " >6<" + mCursor.getString(6) + " >7<" + mCursor.getString(7) + " >8<" + mCursor.getString(8) + " >9<" + mCursor.getString(9) ) ;
+        holder.awayNameTxtView.setText(mCursor.getString(COL_AWAY));
+        holder.leagueNameTxtView.setText(mCursor.getString(COL_LEAGUE_NAME));
+        holder.matchTimeTxtView.setText(mCursor.getString(COL_MATCHSTARTTIME));
+        Log.v(FetchScoreTask.LOG_TAG, "bind View inflated 2" + mCursor.getInt(COL_HOME_GOALS) + " " + mCursor.getInt(COL_AWAY_GOALS));
+        Log.v(FetchScoreTask.LOG_TAG, "bind View inflated 3" + Util.getScores(mCursor.getInt(COL_HOME_GOALS), mCursor.getInt(COL_AWAY_GOALS)));
+               holder.scoreTxtView.setText(Util.getScores(mCursor.getInt(COL_HOME_GOALS), mCursor.getInt(COL_AWAY_GOALS)));
         holder.match_id = mCursor.getDouble(COL_ID);
-        holder.home_crest.setImageResource(Util.getTeamCrestByTeamName(
+        holder.homeFlagImgView.setImageResource(Util.getTeamCrestByTeamName(
                 mCursor.getString(COL_HOME)));
-        holder.away_crest.setImageResource(Util.getTeamCrestByTeamName(
+        holder.awayFlagImgView.setImageResource(Util.getTeamCrestByTeamName(
                 mCursor.getString(COL_AWAY)
         ));
         //Log.v(FetchScoreTask.LOG_TAG,mHolder.home_name.getText() + " Vs. " + mHolder.away_name.getText() +" id " + String.valueOf(mHolder.match_id));
@@ -127,21 +130,24 @@ public class ScoreAdapter  extends RecyclerView.Adapter<ScoreAdapter.ViewHolder>
 
     public class ViewHolder extends RecyclerView.ViewHolder
     {
-        public TextView home_name;
-        public TextView away_name;
-        public TextView score;
-        public TextView date;
-        public ImageView home_crest;
-        public ImageView away_crest;
-        public double match_id;
-        public ViewHolder(View view)
-        {   super(view);
-            home_name = (TextView) view.findViewById(R.id.home_name);
-            away_name = (TextView) view.findViewById(R.id.away_name);
-            score     = (TextView) view.findViewById(R.id.score_textview);
-            date      = (TextView) view.findViewById(R.id.data_textview);
-            home_crest = (ImageView) view.findViewById(R.id.home_crest);
-            away_crest = (ImageView) view.findViewById(R.id.away_crest);
+        protected TextView homeNameTxtView;
+        protected TextView awayNameTxtView;
+        protected TextView leagueNameTxtView;
+        protected TextView scoreTxtView;
+        protected TextView matchTimeTxtView;
+        protected ImageView homeFlagImgView;
+        protected ImageView awayFlagImgView;
+        protected double match_id;
+
+        public ViewHolder(View view) {
+            super(view);
+            homeNameTxtView = (TextView) view.findViewById(R.id.home_name);
+            awayNameTxtView = (TextView) view.findViewById(R.id.away_name);
+            leagueNameTxtView = (TextView) view.findViewById(R.id.league_textview);
+            scoreTxtView = (TextView) view.findViewById(R.id.score_item_score);
+            matchTimeTxtView = (TextView) view.findViewById(R.id.matchtime_textview);
+            homeFlagImgView = (ImageView) view.findViewById(R.id.home_crest);
+            awayFlagImgView = (ImageView) view.findViewById(R.id.away_crest);
         }
     }
 }

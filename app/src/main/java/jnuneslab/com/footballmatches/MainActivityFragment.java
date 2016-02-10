@@ -24,7 +24,7 @@ import jnuneslab.com.footballmatches.data.MatchesContract;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, MultiSwipeRefreshLayout.CanChildScrollUpCallback  {
+public class MainActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, MultiSwipeRefreshLayout.CanChildScrollUpCallback, SwipeRefreshLayout.OnRefreshListener  {
     private ScoreAdapter mScoreAdapter;
     private MultiSwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
@@ -41,9 +41,9 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         mSwipeRefreshLayout = (MultiSwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh_layout);
-        // mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.swipe_progress_colors));
+        mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setCanChildScrollUpCallback(this);
-
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.score_list_view);
         mScoreAdapter = new ScoreAdapter(this);
@@ -52,9 +52,9 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
         mRecyclerView.setAdapter(mScoreAdapter);
 
-        new FetchScoreTask(getContext()).execute();
+      //  new FetchScoreTask(getContext()).execute();
 
-        postRefreshing(true);
+       // postRefreshing(true);
         return rootView;
     }
 
@@ -122,5 +122,14 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                     if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(refreshing);
                 }
             });
+    }
+
+
+    @Override
+    public void onRefresh() {
+
+        getContext().getContentResolver().delete(
+                MatchesContract.BASE_CONTENT_URI, null,null);
+        new FetchScoreTask(getContext()).execute();
     }
 }

@@ -7,10 +7,11 @@
     <color name="primary_dark">@color/material_amber700</color>
     <color name="primary_light">@color/material_amber100</color>
     <color name="accent">@color/material_amberA400</color>
+    <color name="second_accent">#212121</color>
 
     <array name="swipe_progress_colors">
         <item>@color/accent</item>
-        <item>@color/primary</item>
+        <item>@color/second_accent</item>
     </array>
 
     <color name="material_amber50">#fffff8e1</color>

@@ -3,6 +3,7 @@
     package="jnuneslab.com.footballmatches" >
     <uses-permission
         android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,6 +11,14 @@
         android:supportsRtl="true"
         android:theme="@style/MainTheme" >
         <provider android:name=".data.MatchesProvider" android:authorities="jnuneslab.com.footballmatches"/>
+        <activity
+            android:name=".SettingsActivity"
+            android:label="Settings Activity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >

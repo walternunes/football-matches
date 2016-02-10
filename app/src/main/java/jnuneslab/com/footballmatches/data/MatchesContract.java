@@ -1,6 +1,7 @@
 package jnuneslab.com.footballmatches.data;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
@@ -18,7 +19,34 @@ public abstract class MatchesContract {
 
     // Possible paths
     public static final String PATH_MATCHES = "matches";
+    public static final String PATH_LEAGUES = "leagues";
 
+
+    /**
+     * Inner class that defines the contents of the league table
+     */
+    public static final class LeagueEntry implements BaseColumns {
+
+        // Leagues table name
+        public static final String TABLE_NAME = "leagues";
+
+        // Columns
+        public static final String COLUMN_LEAGUE_ID = "league_id";
+        public static final String COLUMN_LEAGUE_NAME = "league_name";
+
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_LEAGUES).build();
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_LEAGUES;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_LEAGUES;
+
+        public static Uri buildLeague() {
+            return CONTENT_URI;
+
+        }
+    }
 
     /**
      * Inner class that defines the table contents of the matches table
@@ -31,7 +59,7 @@ public abstract class MatchesContract {
         // Columns
         public static final String COLUMN_MATCH_ID = "match_id";
         public static final String COLUMN_MATCH_DAY = "match_day";
-        public static final String COLUMN_LEAGUE = "league_id";
+        public static final String COLUMN_LEAGUE_KEY = "league_id";
         public static final String COLUMN_MATCH_DATE = "date";
         public static final String COLUMN_TIME = "time";
         public static final String COLUMN_HOME_TEAM = "home";

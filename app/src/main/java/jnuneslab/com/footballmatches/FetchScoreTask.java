@@ -4,8 +4,10 @@ import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -19,7 +21,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.Vector;
 
@@ -140,6 +145,14 @@ public class FetchScoreTask extends AsyncTask<Void, Void, Void> {
         final String Bundesliga3 = "403";
         final String EREDIVISIE = "404";
 
+        Map<Integer, String> allLeagues = Util.getLeagues(mContext);
+
+        // Remove the leagues that user doesn't want
+        for (Map.Entry<String, ?> entry : PreferenceManager.getDefaultSharedPreferences(mContext).getAll().entrySet()) {
+            if(entry.getValue().equals(false)) {
+                allLeagues.remove(Integer.parseInt(entry.getKey()));
+            }
+         }
 
         final String SEASON_LINK = "http://api.football-data.org/alpha/soccerseasons/";
         final String MATCH_LINK = "http://api.football-data.org/alpha/fixtures/";
@@ -181,16 +194,14 @@ public class FetchScoreTask extends AsyncTask<Void, Void, Void> {
                 Log.d("teste", "teste league antes" + League);
                 League = League.replace(SEASON_LINK, "");
                 Log.d("teste", "teste league depois" + League);
+
                 //This if statement controls which leagues we're interested in the data from.
                 //add leagues here in order to have them be added to the DB.
                 // If you are finding no data in the app, check that this contains all the leagues.
                 // If it doesn't, that can cause an empty DB, bypassing the dummy data routine.
-                if (League.equals(PREMIER_LEAGUE) ||
-                        League.equals(SERIE_A) ||
-                        League.equals(BUNDESLIGA1) ||
-                        League.equals(BUNDESLIGA2) ||
-                        League.equals(PRIMERA_DIVISION) ) {
 
+                //TODO refactor maps signature
+                if(allLeagues.containsKey(Integer.parseInt(League))){
                     match_id = match_data.getJSONObject(LINKS).getJSONObject(SELF).
                             getString("href");
                     match_id = match_id.replace(MATCH_LINK, "");
@@ -236,7 +247,7 @@ public class FetchScoreTask extends AsyncTask<Void, Void, Void> {
                     match_values.put(MatchesContract.MatchesEntry.COLUMN_AWAY_TEAM, Away);
                     match_values.put(MatchesContract.MatchesEntry.COLUMN_HOME_GOALS, Home_goals);
                     match_values.put(MatchesContract.MatchesEntry.COLUMN_AWAY_GOALS, Away_goals);
-                    match_values.put(MatchesContract.MatchesEntry.COLUMN_LEAGUE, League);
+                    match_values.put(MatchesContract.MatchesEntry.COLUMN_LEAGUE_KEY, League);
                     match_values.put(MatchesContract.MatchesEntry.COLUMN_MATCH_DAY, match_day);
                     //log spam
 
