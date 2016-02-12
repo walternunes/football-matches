@@ -37,7 +37,6 @@ public class SettingsActivity  extends PreferenceActivity {
             checkBoxPreference.setTitle(entry.getValue());
             checkBoxPreference.setChecked(true);
             getPreferenceScreen().addPreference(checkBoxPreference);
-            Log.v("map values","fanoll" + entry.getKey() + ": " + entry.getValue().toString());
         }
 
 

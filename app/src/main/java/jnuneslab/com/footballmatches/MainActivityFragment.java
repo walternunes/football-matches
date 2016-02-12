@@ -6,18 +6,14 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import jnuneslab.com.footballmatches.data.MatchesContract;
 
@@ -28,7 +24,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     private ScoreAdapter mScoreAdapter;
     private MultiSwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
-    private String[] fragmentdate = new String[1];
+    private String[] fragmentDate = new String[1];
 
     public MainActivityFragment() {
     }
@@ -52,15 +48,12 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
         mRecyclerView.setAdapter(mScoreAdapter);
 
-      //  new FetchScoreTask(getContext()).execute();
-
-       // postRefreshing(true);
         return rootView;
     }
 
     public void setFragmentDate(String date)
     {
-        fragmentdate[0] = date;
+        fragmentDate[0] = date;
     }
 
     @Override
@@ -73,31 +66,20 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         Log.v(FetchScoreTask.LOG_TAG, "loader started");
         return new CursorLoader(getActivity(), MatchesContract.MatchesEntry.buildScoreWithDate(),
-                null, null, fragmentdate, null);
+                null, null, fragmentDate, null);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         Log.v(FetchScoreTask.LOG_TAG, "loader finished");
-        //cursor.moveToFirst();
-        /*
-        while (!cursor.isAfterLast())
-        {
-            Log.v(FetchScoreTask.LOG_TAG,cursor.getString(1));
-            cursor.moveToNext();
-        }
-        */
 
-        int i = 0;
         cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            i++;
+        while (!cursor.isAfterLast()){
             cursor.moveToNext();
         }
-        //Log.v(FetchScoreTask.LOG_TAG,"Loader query: " + String.valueOf(i));
-        mScoreAdapter.swapCursor(cursor);
-        //mAdapter.notifyDataSetChanged();
 
+        // Swap the cursor and cancel the refresh icon
+        mScoreAdapter.swapCursor(cursor);
         postRefreshing(false);
     }
 

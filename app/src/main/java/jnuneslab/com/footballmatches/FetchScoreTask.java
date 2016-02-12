@@ -1,10 +1,7 @@
 package jnuneslab.com.footballmatches;
 
-import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -21,9 +18,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.Vector;
@@ -32,73 +27,100 @@ import jnuneslab.com.footballmatches.data.MatchesContract;
 
 
 /**
+ * FetchScoreTask class responsible to get all the data of all matches filtered by the selected user leagues and return the data formatted into a vector
  * Created by Walter on 24/11/2015.
  */
-
 public class FetchScoreTask extends AsyncTask<Void, Void, Void> {
-    public static final String LOG_TAG = FetchScoreTask.class.getSimpleName();;
+
+    public static final String LOG_TAG = FetchScoreTask.class.getSimpleName();
     private final Context mContext;
 
-
+    /**
+     * Constructor
+     *
+     * @param context Application context
+     */
     public FetchScoreTask(Context context) {
         mContext = context;
-        Log.v(LOG_TAG, "aqui");
     }
 
     @Override
     protected Void doInBackground(Void... params) {
 
+        // Parameter to get the matches that will be played in the current day and in the next two days
         getData("n3");
+
+        // Parameter to get the previous matches of day and the two days before
         getData("p3");
 
         return null;
     }
 
 
+    /**
+     * Method responsible for getting the all data related with matches of previous and next matches
+     *
+     * @param timeFrame - String parameter (n<number> for future matches and p<number> for previous matches)
+     */
     private void getData(String timeFrame) {
-        //Creating fetch URL
-        final String BASE_URL = "http://api.football-data.org/alpha/fixtures"; //Base URL
-        final String QUERY_TIME_FRAME = "timeFrame"; //Time Frame parameter to determine days
-        //final String QUERY_MATCH_DAY = "matchday";
-        Log.v(LOG_TAG, "aqui2");
+
+        // Creating fetch BASE URL
+        final String BASE_URL = "http://api.football-data.org/alpha/fixtures";
+
+        // Time Frame parameter to determine days
+        final String QUERY_TIME_FRAME = "timeFrame";
+
         Uri fetch_build = Uri.parse(BASE_URL).buildUpon().
                 appendQueryParameter(QUERY_TIME_FRAME, timeFrame).build();
-        Log.v(LOG_TAG, "The url we are looking at is: " + fetch_build.toString()); //log spam
+
+        // Log.v(LOG_TAG, "API Get URL: " + fetch_build.toString()); //log spam
+
         HttpURLConnection m_connection = null;
         BufferedReader reader = null;
         String JSON_data = null;
-        //Opening Connection
+
+
         try {
+
+            // Make the request to the API, for this case is necessary to put the api key inside a X-Auth-Token property. Otherwise the API will block after 10 attempts
             URL fetch = new URL(fetch_build.toString());
             m_connection = (HttpURLConnection) fetch.openConnection();
             m_connection.setRequestMethod("GET");
             m_connection.addRequestProperty("X-Auth-Token", mContext.getString(R.string.api_key));
             m_connection.connect();
 
-            // Read the input stream into a String
+            // Get the input stream
             InputStream inputStream = m_connection.getInputStream();
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder buffer = new StringBuilder();
+
+            // If the response was empty, return because there is nothing to do
             if (inputStream == null) {
-                // Nothing to do.
                 return;
             }
-            reader = new BufferedReader(new InputStreamReader(inputStream));
 
+            // Read the input stream into a buffer that will be the JSON_data
+            reader = new BufferedReader(new InputStreamReader(inputStream));
             String line;
             while ((line = reader.readLine()) != null) {
                 buffer.append(line + "\n");
             }
+
+            // Return in case of empty stream
             if (buffer.length() == 0) {
-                // Empty Stream
                 return;
             }
+
             JSON_data = buffer.toString();
         } catch (Exception e) {
-            Log.e(LOG_TAG, "Exception here" + e.getMessage());
+            Log.e(LOG_TAG, "Exception fetching data" + e.getMessage());
         } finally {
+
+            // Close the connection
             if (m_connection != null) {
                 m_connection.disconnect();
             }
+
+            // Close the stream
             if (reader != null) {
                 try {
                     reader.close();
@@ -107,21 +129,25 @@ public class FetchScoreTask extends AsyncTask<Void, Void, Void> {
                 }
             }
         }
+
         try {
             if (JSON_data != null) {
-                //This bit is to check if the data contains any matches. If not, we call processJson on the dummy data
+
+                // Check if the data contains any matches. If not, call processJson with the dummy data
                 JSONArray matches = new JSONObject(JSON_data).getJSONArray("fixtures");
                 if (matches.length() == 0) {
-                    //if there is no data, call the function on dummy data
-                    //this is expected behavior during the off season.
-                   // processJSONdata(getString(R.string.dummy_data), getApplicationContext(), false);
+                    // If there is no data, call the function on dummy data. This is the expected behavior during the off season.
+                    // TODO create dummy_data
+                    // processJSONdata(getString(R.string.dummy_data), getApplicationContext(), false);
                     return;
                 }
 
+                // Start to parser the data
                 Log.d(LOG_TAG, "JSON data." + JSON_data);
                 processJSONdata(JSON_data, mContext, true);
             } else {
-                //Could not Connect
+
+                // Could not Connect
                 Log.d(LOG_TAG, "Could not connect to server.");
             }
         } catch (Exception e) {
@@ -130,148 +156,118 @@ public class FetchScoreTask extends AsyncTask<Void, Void, Void> {
     }
 
     private void processJSONdata(String JSONdata, Context mContext, boolean isReal) {
-        //JSON data
-        // This set of league codes is for the 2015/2016 season. In fall of 2016, they will need to
-        // be updated. Feel free to use the codes
-        final String BUNDESLIGA1 = "394";
-        final String BUNDESLIGA2 = "395";
-        final String LIGUE1 = "396";
-        final String LIGUE2 = "397";
-        final String PREMIER_LEAGUE = "398";
-        final String PRIMERA_DIVISION = "399";
-        final String SEGUNDA_DIVISION = "400";
-        final String SERIE_A = "401";
-        final String PRIMERA_LIGA = "402";
-        final String Bundesliga3 = "403";
-        final String EREDIVISIE = "404";
 
+        // Get all the leagues available
         Map<Integer, String> allLeagues = Util.getLeagues(mContext);
 
-        // Remove the leagues that user doesn't want
+        // Remove the leagues that user doesn't want specified in Shared Preferences
         for (Map.Entry<String, ?> entry : PreferenceManager.getDefaultSharedPreferences(mContext).getAll().entrySet()) {
-            if(entry.getValue().equals(false)) {
+            if (entry.getValue().equals(false)) {
                 allLeagues.remove(Integer.parseInt(entry.getKey()));
             }
-         }
+        }
 
-        final String SEASON_LINK = "http://api.football-data.org/alpha/soccerseasons/";
-        final String MATCH_LINK = "http://api.football-data.org/alpha/fixtures/";
-        final String FIXTURES = "fixtures";
-        final String LINKS = "_links";
-        final String SOCCER_SEASON = "soccerseason";
-        final String SELF = "self";
-        final String MATCH_DATE = "date";
-        final String HOME_TEAM = "homeTeamName";
-        final String AWAY_TEAM = "awayTeamName";
-        final String RESULT = "result";
-        final String HOME_GOALS = "goalsHomeTeam";
-        final String AWAY_GOALS = "goalsAwayTeam";
-        final String MATCH_DAY = "matchday";
+        // API link headers
+        final String API_SEASON_LINK = "http://api.football-data.org/alpha/soccerseasons/";
+        final String API_MATCH_LINK = "http://api.football-data.org/alpha/fixtures/";
+        final String API_FIXTURES = "fixtures";
+        final String API_LINKS = "_links";
+        final String API_SOCCER_SEASON = "soccerseason";
+        final String API_SELF = "self";
+        final String API_MATCH_DATE = "date";
+        final String API_HOME_TEAM = "homeTeamName";
+        final String API_AWAY_TEAM = "awayTeamName";
+        final String API_RESULT = "result";
+        final String API_HOME_GOALS = "goalsHomeTeam";
+        final String API_AWAY_GOALS = "goalsAwayTeam";
+        final String API_MATCH_DAY = "matchday";
 
-        //Match data
-        String League = null;
-        String mDate = null;
-        String mTime = null;
-        String Home = null;
-        String Away = null;
-        String Home_goals = null;
-        String Away_goals = null;
-        String match_id = null;
-        String match_day = null;
-
+        // Matches data
+        String sLeague, sDate, sTime, sHome, sAway, sHomeGoals, sAwayGoals, sMatchId, sMatchDay;
 
         try {
-            JSONArray matches = new JSONObject(JSONdata).getJSONArray(FIXTURES);
+            JSONArray matches = new JSONObject(JSONdata).getJSONArray(API_FIXTURES);
 
-
-            //ContentValues to be inserted
-            Vector<ContentValues> values = new Vector<ContentValues>(matches.length());
+            // ContentValues of the matches
+            Vector<ContentValues> values = new Vector<>(matches.length());
             for (int i = 0; i < matches.length(); i++) {
 
+                // Parsing the link to get only league ID
                 JSONObject match_data = matches.getJSONObject(i);
-                League = match_data.getJSONObject(LINKS).getJSONObject(SOCCER_SEASON).
-                        getString("href");
-                Log.d("teste", "teste league antes" + League);
-                League = League.replace(SEASON_LINK, "");
-                Log.d("teste", "teste league depois" + League);
+                sLeague = match_data.getJSONObject(API_LINKS).getJSONObject(API_SOCCER_SEASON).getString("href");
+                sLeague = sLeague.replace(API_SEASON_LINK, "");
 
-                //This if statement controls which leagues we're interested in the data from.
-                //add leagues here in order to have them be added to the DB.
-                // If you are finding no data in the app, check that this contains all the leagues.
-                // If it doesn't, that can cause an empty DB, bypassing the dummy data routine.
-
-                //TODO refactor maps signature
-                if(allLeagues.containsKey(Integer.parseInt(League))){
-                    match_id = match_data.getJSONObject(LINKS).getJSONObject(SELF).
+                // Check if the league fetched is one of the leagues the user desire to see
+                if (allLeagues.containsKey(Integer.parseInt(sLeague))) {
+                    sMatchId = match_data.getJSONObject(API_LINKS).getJSONObject(API_SELF).
                             getString("href");
-                    match_id = match_id.replace(MATCH_LINK, "");
+                    sMatchId = sMatchId.replace(API_MATCH_LINK, "");
+
+                    // If it is not real, change the match ID of the dummy data so that will all go into the database
                     if (!isReal) {
-                        //This if statement changes the match ID of the dummy data so that it all goes into the database
-                        match_id = match_id + Integer.toString(i);
+                        sMatchId = sMatchId + Integer.toString(i);
                     }
 
-                    mDate = match_data.getString(MATCH_DATE);
-                    mTime = mDate.substring(mDate.indexOf("T") + 1, mDate.indexOf("Z"));
-                    mDate = mDate.substring(0, mDate.indexOf("T"));
+                    // Formatting date and time
+                    sDate = match_data.getString(API_MATCH_DATE);
+                    sTime = sDate.substring(sDate.indexOf("T") + 1, sDate.indexOf("Z"));
+                    sDate = sDate.substring(0, sDate.indexOf("T"));
                     SimpleDateFormat match_date = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
                     match_date.setTimeZone(TimeZone.getTimeZone("UTC"));
                     try {
-                        Date parseddate = match_date.parse(mDate + mTime);
-                        SimpleDateFormat new_date = new SimpleDateFormat("yyyy-MM-dd:HH:mm");
-                        new_date.setTimeZone(TimeZone.getDefault());
-                        mDate = new_date.format(parseddate);
-                        mTime = mDate.substring(mDate.indexOf(":") + 1);
-                        mDate = mDate.substring(0, mDate.indexOf(":"));
+                        Date parsedDate = match_date.parse(sDate + sTime);
+                        SimpleDateFormat newDate = new SimpleDateFormat("yyyy-MM-dd:HH:mm");
+                        newDate.setTimeZone(TimeZone.getDefault());
+                        sDate = newDate.format(parsedDate);
+                        sTime = sDate.substring(sDate.indexOf(":") + 1);
+                        sDate = sDate.substring(0, sDate.indexOf(":"));
 
+                        // If it is not real, changes the dummy data's date to match our current date range.
                         if (!isReal) {
-                            //This if statement changes the dummy data's date to match our current date range.
                             Date fragmentdate = new Date(System.currentTimeMillis() + ((i - 2) * 86400000));
                             SimpleDateFormat mformat = new SimpleDateFormat("yyyy-MM-dd");
-                            mDate = mformat.format(fragmentdate);
+                            sDate = mformat.format(fragmentdate);
                         }
                     } catch (Exception e) {
-                        Log.d(LOG_TAG, "error here!");
-                        Log.e(LOG_TAG, e.getMessage());
+                        Log.e(LOG_TAG, "error parsing date" + e.getMessage());
                     }
-                    Home = match_data.getString(HOME_TEAM);
-                    Away = match_data.getString(AWAY_TEAM);
-                    Home_goals = match_data.getJSONObject(RESULT).getString(HOME_GOALS);
-                    Away_goals = match_data.getJSONObject(RESULT).getString(AWAY_GOALS);
-                    match_day = match_data.getString(MATCH_DAY);
-                    ContentValues match_values = new ContentValues();
 
-                    match_values.put(MatchesContract.MatchesEntry.COLUMN_MATCH_ID, match_id);
-                    match_values.put(MatchesContract.MatchesEntry.COLUMN_MATCH_DATE, mDate);
-                    match_values.put(MatchesContract.MatchesEntry.COLUMN_TIME, mTime);
-                    match_values.put(MatchesContract.MatchesEntry.COLUMN_HOME_TEAM, Home);
-                    match_values.put(MatchesContract.MatchesEntry.COLUMN_AWAY_TEAM, Away);
-                    match_values.put(MatchesContract.MatchesEntry.COLUMN_HOME_GOALS, Home_goals);
-                    match_values.put(MatchesContract.MatchesEntry.COLUMN_AWAY_GOALS, Away_goals);
-                    match_values.put(MatchesContract.MatchesEntry.COLUMN_LEAGUE_KEY, League);
-                    match_values.put(MatchesContract.MatchesEntry.COLUMN_MATCH_DAY, match_day);
+                    // Get the values of the matches data
+                    sHome = match_data.getString(API_HOME_TEAM);
+                    sAway = match_data.getString(API_AWAY_TEAM);
+                    sHomeGoals = match_data.getJSONObject(API_RESULT).getString(API_HOME_GOALS);
+                    sAwayGoals = match_data.getJSONObject(API_RESULT).getString(API_AWAY_GOALS);
+                    sMatchDay = match_data.getString(API_MATCH_DAY);
+                    ContentValues matchValues = new ContentValues();
+
+                    // Add the values to the array
+                    matchValues.put(MatchesContract.MatchesEntry.COLUMN_MATCH_ID, sMatchId);
+                    matchValues.put(MatchesContract.MatchesEntry.COLUMN_MATCH_DATE, sDate);
+                    matchValues.put(MatchesContract.MatchesEntry.COLUMN_TIME, sTime);
+                    matchValues.put(MatchesContract.MatchesEntry.COLUMN_HOME_TEAM, sHome);
+                    matchValues.put(MatchesContract.MatchesEntry.COLUMN_AWAY_TEAM, sAway);
+                    matchValues.put(MatchesContract.MatchesEntry.COLUMN_HOME_GOALS, sHomeGoals);
+                    matchValues.put(MatchesContract.MatchesEntry.COLUMN_AWAY_GOALS, sAwayGoals);
+                    matchValues.put(MatchesContract.MatchesEntry.COLUMN_LEAGUE_KEY, sLeague);
+                    matchValues.put(MatchesContract.MatchesEntry.COLUMN_MATCH_DAY, sMatchDay);
+
+                    // Add values
+                    values.add(matchValues);
+
                     //log spam
-
-                    Log.v(LOG_TAG,match_id);
-                    Log.v(LOG_TAG,mDate);
-                    Log.v(LOG_TAG,mTime);
-                    Log.v(LOG_TAG,Home);
-                    Log.v(LOG_TAG,Away);
-                    Log.v(LOG_TAG,Home_goals);
-                    Log.v(LOG_TAG,Away_goals);
-                    Log.v(LOG_TAG,League);
-
-                    values.add(match_values);
+                    //Log.v(LOG_TAG, "MatchID: " + sMatchId + " \nDate: " + sDate + " \nTime: " + sTime + " \nHome: " + sHome + " \nAway: " + sAway + " \nHomeGoals: " + sHomeGoals + " \nAwayGoals: " + sAwayGoals + " \nLeague: " + sLeague);
                 }
             }
-            int inserted_data = 0;
-             ContentValues[] insert_data = new ContentValues[values.size()];
-             values.toArray(insert_data);
-             inserted_data = mContext.getContentResolver().bulkInsert(
+
+            // Prepare the vector to return
+            ContentValues[] insert_data = new ContentValues[values.size()];
+            values.toArray(insert_data);
+            int insertedRows = mContext.getContentResolver().bulkInsert(
                     MatchesContract.BASE_CONTENT_URI, insert_data);
 
-            Log.v(LOG_TAG,"Succesfully Inserted : " + String.valueOf(inserted_data));
+            Log.v(LOG_TAG, "Successfully Inserted : " + String.valueOf(insertedRows));
         } catch (JSONException e) {
-            Log.e(LOG_TAG, e.getMessage());
+            Log.e(LOG_TAG, "JSON Exception: " + e.getMessage());
         }
 
     }

@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
+ *
  * Created by Walter on 23/11/2015.
  */
 public class ScoreAdapter  extends RecyclerView.Adapter<ScoreAdapter.ViewHolder> {
@@ -34,12 +35,6 @@ public class ScoreAdapter  extends RecyclerView.Adapter<ScoreAdapter.ViewHolder>
     private Cursor mCursor;
     private Context mContext;
     private LayoutInflater  mInflater;
-    // private OnScoreItemClickListener mListener = OnScoreItemClickListener.DUMMY;
-
-    //public ScoresAdapter setListener(OnScoreItemClickListener listener) {
-    //  mListener = listener;
-    // return this;
-    // }
 
     public ScoreAdapter(Fragment fragment)
     {
@@ -58,25 +53,17 @@ public class ScoreAdapter  extends RecyclerView.Adapter<ScoreAdapter.ViewHolder>
 
     @Override
     public int getItemCount() {
-        Log.v("teste" , "test getitemcount");
         return mCursor != null ? mCursor.getCount() : 0;
     }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.v("teste" , "test createviewholder");
 
         return new ViewHolder(mInflater.inflate(R.layout.scores_list_item, parent, false));
-       /* View mItem = LayoutInflater.from(mContext).inflate(R.layout.scores_list_item, parent, false);
-        ViewHolder mHolder = new ViewHolder(mItem);
-        mItem.setTag(mHolder);
-        Log.v(FetchScoreTask.LOG_TAG, "new View inflated");
-        return mItem;*/
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        Log.v("teste", "test bindviewholder");
-        //final ViewHolder mHolder = (ViewHolder) view.getTag();
+
         mCursor.moveToPosition(position);
         holder.homeNameTxtView.setText(mCursor.getString(COL_HOME));
         Log.v(FetchScoreTask.LOG_TAG, "bind View inflated 1><" + mCursor.getString(10) + " >2<" + mCursor.getString(2) + " >3<" + mCursor.getString(3) + " >4<" + mCursor.getString(4) + " >5<" + mCursor.getString(5) + " >6<" + mCursor.getString(6) + " >7<" + mCursor.getString(7) + " >8<" + mCursor.getString(8) + " >9<" + mCursor.getString(9) ) ;
@@ -92,39 +79,10 @@ public class ScoreAdapter  extends RecyclerView.Adapter<ScoreAdapter.ViewHolder>
         holder.awayFlagImgView.setImageResource(Util.getTeamCrestByTeamName(
                 mCursor.getString(COL_AWAY)
         ));
-        //Log.v(FetchScoreTask.LOG_TAG,mHolder.home_name.getText() + " Vs. " + mHolder.away_name.getText() +" id " + String.valueOf(mHolder.match_id));
-        //Log.v(FetchScoreTask.LOG_TAG,String.valueOf(detail_match_id));
+
         LayoutInflater vi = (LayoutInflater) mContext.getApplicationContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = vi.inflate(R.layout.fragment_main, null);
-        // ViewGroup container = (ViewGroup) view.findViewById(R.id.details_fragment_container);
-        //  if(holder.match_id == detail_match_id)
-        {
-            //Log.v(FetchScoreTask.LOG_TAG,"will insert extraView");
-
-            //    container.addView(v, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT
-            //             , ViewGroup.LayoutParams.MATCH_PARENT));
-            // TextView match_day = (TextView) v.findViewById(R.id.matchday_textview);
-            // match_day.setText(Utilies.getMatchDay(cursor.getInt(COL_MATCHDAY),
-            //         cursor.getInt(COL_LEAGUE)));
-            // TextView league = (TextView) v.findViewById(R.id.);
-            // league.setText(Utilies.getLeague(cursor.getInt(COL_LEAGUE)));
-            //   Button share_button = (Button) v.findViewById(R.id.share_button);
-            //   share_button.setOnClickListener(new View.OnClickListener() {
-            //      @Override
-            //      public void onClick(View v)
-            //        {
-            //add Share Action
-            //           context.startActivity(createShareForecastIntent(mHolder.home_name.getText()+" "
-            //                  +mHolder.score.getText()+" "+mHolder.away_name.getText() + " "));
-            //       }
-            //   });
-        }
-        //  else
-        //   {
-        //      Log.v(FetchScoreTask.LOG_TAG, "remove views");
-        //     container.removeAllViews();
-        //  }
     }
 
 
