@@ -9,7 +9,6 @@ import jnuneslab.com.footballmatches.data.MatchesContract.LeagueEntry;
 
 /**
  * Matches DB Helper
- * Created by Walter on 02/02/2016.
  */
 public class MatchesDBHelper extends SQLiteOpenHelper {
 
@@ -70,20 +69,21 @@ public class MatchesDBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Method used to execute the insert of initial league names in a transaction
+     * Method used to execute the insertion of the initial league names in a DB transaction
      * @param db SQLite Database
      */
     private void populateLeague(SQLiteDatabase db){
 
-        db.execSQL("INSERT OR REPLACE INTO " + LeagueEntry.TABLE_NAME + " VALUES ( 398, 'Premier League'); ");
+
         db.execSQL("INSERT OR REPLACE INTO " + LeagueEntry.TABLE_NAME + " VALUES ( 362, 'Champions League'); ");
-        db.execSQL("INSERT OR REPLACE INTO " + LeagueEntry.TABLE_NAME + " VALUES ( 399, 'Primeira Division'); ");
-       // db.execSQL("INSERT OR REPLACE INTO " + LeagueEntry.TABLE_NAME + " VALUES ( 400, 'Segunda Division'); " );
         db.execSQL("INSERT OR REPLACE INTO " + LeagueEntry.TABLE_NAME + " VALUES ( 394, 'BundesLiga'); ");
-      //  db.execSQL("INSERT OR REPLACE INTO " + LeagueEntry.TABLE_NAME + " VALUES ( 395, 'BundesLiga'); " );
-      //  db.execSQL("INSERT OR REPLACE INTO " + LeagueEntry.TABLE_NAME + " VALUES ( 403, 'BundesLiga'); ");
+        db.execSQL("INSERT OR REPLACE INTO " + LeagueEntry.TABLE_NAME + " VALUES ( 398, 'Premier League'); ");
+        db.execSQL("INSERT OR REPLACE INTO " + LeagueEntry.TABLE_NAME + " VALUES ( 399, 'Primeira Division'); ");
         db.execSQL("INSERT OR REPLACE INTO " + LeagueEntry.TABLE_NAME + " VALUES ( 401, 'Serie A'); ");
-        db.execSQL("INSERT OR REPLACE INTO " + LeagueEntry.TABLE_NAME + " VALUES ( 402, 'Primera Liga'); ");
-      //  db.execSQL("INSERT OR REPLACE INTO " + LeagueEntry.TABLE_NAME + " VALUES ( 404, 'Eredivisie'); ");
+       // db.execSQL("INSERT OR REPLACE INTO " + LeagueEntry.TABLE_NAME + " VALUES ( 402, 'Primera Liga'); ");
+       // db.execSQL("INSERT OR REPLACE INTO " + LeagueEntry.TABLE_NAME + " VALUES ( 400, 'Segunda Division'); " );
+       // db.execSQL("INSERT OR REPLACE INTO " + LeagueEntry.TABLE_NAME + " VALUES ( 395, 'BundesLiga'); " );
+       // db.execSQL("INSERT OR REPLACE INTO " + LeagueEntry.TABLE_NAME + " VALUES ( 403, 'BundesLiga'); ");
+       // db.execSQL("INSERT OR REPLACE INTO " + LeagueEntry.TABLE_NAME + " VALUES ( 404, 'Eredivisie'); ");
     }
 }

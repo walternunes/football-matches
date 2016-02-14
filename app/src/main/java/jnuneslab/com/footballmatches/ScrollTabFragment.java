@@ -27,10 +27,30 @@ public final class ScrollTabFragment extends Fragment {
     // Start position of toolbar. Start position is zero
     public static final int TODAY_POSITION = 2;
 
+    // State fragment identifier to be add as argument in the fragment
+    public static final String STATE_DATE_FRAGMENT = "date_fragment";
+
     private MainActivityFragment[] viewFragments = new MainActivityFragment[NUM_PAGES];
     private ScrollTabAdapter mPagerScrollAdapter;
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
+
+    /**
+     * Method responsible for create a new instance of MainActivityFragment and add an argument containing a date
+     * @param date - String containing the date
+     * @return - The instance of the MainActivityFragment
+     */
+    public static MainActivityFragment newInstance(String date) {
+
+        // Create a bundle and add the date into it
+        Bundle args = new Bundle();
+        args.putString(STATE_DATE_FRAGMENT, date);
+
+        // Create a new instance and set the arguments
+        MainActivityFragment fragment = new MainActivityFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -52,8 +72,7 @@ public final class ScrollTabFragment extends Fragment {
         for (int i = 0; i < NUM_PAGES; i++) {
             Date fragmentDate = new Date(System.currentTimeMillis() + ((i - 2) * 86400000));
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            viewFragments[i] = new MainActivityFragment();
-            viewFragments[i].setFragmentDate(dateFormat.format(fragmentDate));
+            viewFragments[i] = ScrollTabFragment.newInstance(dateFormat.format(fragmentDate));
         }
 
         // Set the listener to be able to change the tabs by clicking in the item directly (without swipe)

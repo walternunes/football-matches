@@ -28,7 +28,6 @@ import jnuneslab.com.footballmatches.data.MatchesContract;
 
 /**
  * FetchScoreTask class responsible to get all the data of all matches filtered by the selected user leagues and return the data formatted into a vector
- * Created by Walter on 24/11/2015.
  */
 public class FetchScoreTask extends AsyncTask<Void, Void, Void> {
 
@@ -75,22 +74,22 @@ public class FetchScoreTask extends AsyncTask<Void, Void, Void> {
 
         // Log.v(LOG_TAG, "API Get URL: " + fetch_build.toString()); //log spam
 
-        HttpURLConnection m_connection = null;
+        HttpURLConnection httpConnection = null;
         BufferedReader reader = null;
-        String JSON_data = null;
+        String jsonData = null;
 
 
         try {
 
             // Make the request to the API, for this case is necessary to put the api key inside a X-Auth-Token property. Otherwise the API will block after 10 attempts
             URL fetch = new URL(fetch_build.toString());
-            m_connection = (HttpURLConnection) fetch.openConnection();
-            m_connection.setRequestMethod("GET");
-            m_connection.addRequestProperty("X-Auth-Token", mContext.getString(R.string.api_key));
-            m_connection.connect();
+            httpConnection = (HttpURLConnection) fetch.openConnection();
+            httpConnection.setRequestMethod("GET");
+            httpConnection.addRequestProperty("X-Auth-Token", mContext.getString(R.string.api_key));
+            httpConnection.connect();
 
             // Get the input stream
-            InputStream inputStream = m_connection.getInputStream();
+            InputStream inputStream = httpConnection.getInputStream();
             StringBuilder buffer = new StringBuilder();
 
             // If the response was empty, return because there is nothing to do
@@ -98,7 +97,7 @@ public class FetchScoreTask extends AsyncTask<Void, Void, Void> {
                 return;
             }
 
-            // Read the input stream into a buffer that will be the JSON_data
+            // Read the input stream into a buffer that will be the jsonData
             reader = new BufferedReader(new InputStreamReader(inputStream));
             String line;
             while ((line = reader.readLine()) != null) {
@@ -110,14 +109,14 @@ public class FetchScoreTask extends AsyncTask<Void, Void, Void> {
                 return;
             }
 
-            JSON_data = buffer.toString();
+            jsonData = buffer.toString();
         } catch (Exception e) {
             Log.e(LOG_TAG, "Exception fetching data" + e.getMessage());
         } finally {
 
             // Close the connection
-            if (m_connection != null) {
-                m_connection.disconnect();
+            if (httpConnection != null) {
+                httpConnection.disconnect();
             }
 
             // Close the stream
@@ -131,20 +130,19 @@ public class FetchScoreTask extends AsyncTask<Void, Void, Void> {
         }
 
         try {
-            if (JSON_data != null) {
+            if (jsonData != null) {
 
                 // Check if the data contains any matches. If not, call processJson with the dummy data
-                JSONArray matches = new JSONObject(JSON_data).getJSONArray("fixtures");
+                JSONArray matches = new JSONObject(jsonData).getJSONArray("fixtures");
                 if (matches.length() == 0) {
                     // If there is no data, call the function on dummy data. This is the expected behavior during the off season.
-                    // TODO create dummy_data
-                    // processJSONdata(getString(R.string.dummy_data), getApplicationContext(), false);
+                    // processJSONdata(mContext.getString(R.string.dummy_data), mContext.getApplicationContext(), false);
                     return;
                 }
 
                 // Start to parser the data
-                Log.d(LOG_TAG, "JSON data." + JSON_data);
-                processJSONdata(JSON_data, mContext, true);
+                Log.d(LOG_TAG, "JSON data." + jsonData);
+                processJSONdata(jsonData, mContext, true);
             } else {
 
                 // Could not Connect
@@ -224,9 +222,9 @@ public class FetchScoreTask extends AsyncTask<Void, Void, Void> {
 
                         // If it is not real, changes the dummy data's date to match our current date range.
                         if (!isReal) {
-                            Date fragmentdate = new Date(System.currentTimeMillis() + ((i - 2) * 86400000));
+                            Date fragmentDate = new Date(System.currentTimeMillis() + ((i - 2) * 86400000));
                             SimpleDateFormat mformat = new SimpleDateFormat("yyyy-MM-dd");
-                            sDate = mformat.format(fragmentdate);
+                            sDate = mformat.format(fragmentDate);
                         }
                     } catch (Exception e) {
                         Log.e(LOG_TAG, "error parsing date" + e.getMessage());

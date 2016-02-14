@@ -1,13 +1,11 @@
 package jnuneslab.com.footballmatches.data;
 
 import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
  * Database Matches contract
- * Created by Walter on 02/02/2016.
  */
 public abstract class MatchesContract {
 
@@ -39,8 +37,6 @@ public abstract class MatchesContract {
 
         public static final String CONTENT_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_LEAGUES;
-        public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_LEAGUES;
 
         public static Uri buildLeague() {
             return CONTENT_URI;

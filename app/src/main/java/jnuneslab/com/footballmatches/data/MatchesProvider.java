@@ -7,11 +7,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 /**
  * Matches content provider
- * Created by Walter on 02/02/2016.
  */
 public class MatchesProvider extends ContentProvider {
 
@@ -96,14 +96,14 @@ public class MatchesProvider extends ContentProvider {
     }
 
     @Override
-    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+    public int update(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
 
         // Don't need to update values
         return 0;
     }
 
     @Override
-    public String getType(Uri uri) {
+    public String getType(@NonNull Uri uri) {
         final int match = muriMatcher.match(uri);
         switch (match) {
             case MATCHES:
@@ -122,7 +122,7 @@ public class MatchesProvider extends ContentProvider {
     }
 
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+    public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 
         Cursor retCursor;
         int match = matchURI(uri);
@@ -149,7 +149,6 @@ public class MatchesProvider extends ContentProvider {
                         projection, SCORES_BY_ID, selectionArgs, null, null, sortOrder);
                 break;
             case MATCHES_WITH_LEAGUE:
-                Log.v("fano", "fanol");
                 retCursor = sMatcheByLeagueQueryBuilder.query(
                        mOpenHelper.getReadableDatabase(),
                        projection, SCORES_BY_LEAGUE, selectionArgs, null, null, sortOrder);
@@ -163,14 +162,14 @@ public class MatchesProvider extends ContentProvider {
     }
 
     @Override
-    public Uri insert(Uri uri, ContentValues values) {
+    public Uri insert(@NonNull Uri uri, ContentValues values) {
 
         // Only use bulkInsert
         return null;
     }
 
     @Override
-    public int bulkInsert(Uri uri, ContentValues[] values) {
+    public int bulkInsert(@NonNull Uri uri, ContentValues[] values) {
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 
         switch (matchURI(uri)) {
@@ -198,7 +197,7 @@ public class MatchesProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
+    public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
 
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         int rowsDeleted;

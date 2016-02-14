@@ -1,36 +1,24 @@
 package jnuneslab.com.footballmatches;
 
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceCategory;
-import android.preference.PreferenceManager;
-import android.preference.PreferenceScreen;
-import android.util.Log;
-
 import java.util.Map;
 
-import jnuneslab.com.footballmatches.data.MatchesContract;
-
 /**
- * Created by Walter on 10/02/2016.
+ * SettingsActivity class responsible for handle which leagues should be shown in Main Activity
  */
 public class SettingsActivity  extends PreferenceActivity {
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
          addPreferencesFromResource(R.xml.pref_general);
 
-     //   Cursor cursor = getApplicationContext().getContentResolver().query(MatchesContract.LeagueEntry.CONTENT_URI, null, null, null, null);
-
+        // Get all leagues
         Map<Integer,String> mapLeagues = Util.getLeagues(getApplicationContext());
 
+        // Create all checkbox preference in the screen, one for each league
         for (Map.Entry<Integer, String> entry : mapLeagues.entrySet()) {
             CheckBoxPreference checkBoxPreference = new CheckBoxPreference(this);
             checkBoxPreference.setKey(entry.getKey().toString());
@@ -38,7 +26,5 @@ public class SettingsActivity  extends PreferenceActivity {
             checkBoxPreference.setChecked(true);
             getPreferenceScreen().addPreference(checkBoxPreference);
         }
-
-
     }
 }
