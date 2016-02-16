@@ -1,8 +1,18 @@
 <resources>
+
+    <!-- Application name -->
     <string name="app_name">Football Matches</string>
+
+    <!-- Settings menu name -->
     <string name="action_settings">Settings</string>
+
+    <!-- Toolbar values -->
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>
     <string name="yesterday">Yesterday</string>
-    <string name="dummy_data">{\"timeFrameStart\":\"2015-06-18\",\"timeFrameEnd\":\"2015-06-19\",\"count\":1,\"fixtures\":[{\"_links\":{\"self\":{\"href\":\"http://api.football-mCursor.org/alpha/fixtures/140514\"},\"soccerseason\":{\"href\":\"http://api.football-mCursor.org/alpha/soccerseasons/357\"},\"homeTeam\":{\"href\":\"http://api.football-mCursor.org/alpha/teams/275\"},\"awayTeam\":{\"href\":\"http://api.football-mCursor.org/alpha/teams/263\"}},\"date\":\"2015-06-19T22:00:00Z\",\"status\":\"FINISHED\",\"matchday\":42,\"homeTeamName\":\"TESTING1\",\"awayTeamName\":\"TESTING2\",\"result\":{\"goalsHomeTeam\":2,\"goalsAwayTeam\":4}},{\"_links\":{\"self\":{\"href\":\"http://api.football-mCursor.org/alpha/fixtures/140514\"},\"soccerseason\":{\"href\":\"http://api.football-mCursor.org/alpha/soccerseasons/357\"},\"homeTeam\":{\"href\":\"http://api.football-mCursor.org/alpha/teams/275\"},\"awayTeam\":{\"href\":\"http://api.football-mCursor.org/alpha/teams/263\"}},\"date\":\"2015-06-19T22:00:00Z\",\"status\":\"FINISHED\",\"matchday\":42,\"homeTeamName\":\"TESTING1\",\"awayTeamName\":\"TESTING2\",\"result\":{\"goalsHomeTeam\":2,\"goalsAwayTeam\":4}},{\"_links\":{\"self\":{\"href\":\"http://api.football-mCursor.org/alpha/fixtures/140514\"},\"soccerseason\":{\"href\":\"http://api.football-mCursor.org/alpha/soccerseasons/357\"},\"homeTeam\":{\"href\":\"http://api.football-mCursor.org/alpha/teams/275\"},\"awayTeam\":{\"href\":\"http://api.football-mCursor.org/alpha/teams/263\"}},\"date\":\"2015-06-19T22:00:00Z\",\"status\":\"FINISHED\",\"matchday\":42,\"homeTeamName\":\"TESTING1\",\"awayTeamName\":\"TESTING2\",\"result\":{\"goalsHomeTeam\":2,\"goalsAwayTeam\":4}},{\"_links\":{\"self\":{\"href\":\"http://api.football-mCursor.org/alpha/fixtures/140514\"},\"soccerseason\":{\"href\":\"http://api.football-mCursor.org/alpha/soccerseasons/357\"},\"homeTeam\":{\"href\":\"http://api.football-mCursor.org/alpha/teams/275\"},\"awayTeam\":{\"href\":\"http://api.football-mCursor.org/alpha/teams/263\"}},\"date\":\"2015-06-19T22:00:00Z\",\"status\":\"FINISHED\",\"matchday\":42,\"homeTeamName\":\"TESTING1\",\"awayTeamName\":\"TESTING2\",\"result\":{\"goalsHomeTeam\":2,\"goalsAwayTeam\":4}},{\"_links\":{\"self\":{\"href\":\"http://api.football-mCursor.org/alpha/fixtures/140514\"},\"soccerseason\":{\"href\":\"http://api.football-mCursor.org/alpha/soccerseasons/357\"},\"homeTeam\":{\"href\":\"http://api.football-mCursor.org/alpha/teams/275\"},\"awayTeam\":{\"href\":\"http://api.football-mCursor.org/alpha/teams/263\"}},\"date\":\"2015-06-19T22:00:00Z\",\"status\":\"FINISHED\",\"matchday\":42,\"homeTeamName\":\"TESTING1\",\"awayTeamName\":\"TESTING2\",\"result\":{\"goalsHomeTeam\":2,\"goalsAwayTeam\":4}}]}</string>
+
+    <!-- Description values -->
+    <string name="description_home">home</string>
+    <string name="description_away">away</string>
+
 </resources>

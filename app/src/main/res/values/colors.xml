@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Text body sizes -->
     <color name="text_body_primary">#deffffff</color>
     <color name="text_body_secondary">#8affffff</color>
+
+    <!-- Primary colors -->
     <color name="primary">@color/material_amber500</color>
     <color name="primary_dark">@color/material_amber700</color>
     <color name="primary_light">@color/material_amber100</color>
+
+    <!-- Accent colors -->
     <color name="accent">@color/material_amberA400</color>
     <color name="second_accent">#212121</color>
 
-    <array name="swipe_progress_colors">
-        <item>@color/accent</item>
-        <item>@color/second_accent</item>
-    </array>
-
+    <!-- Material amber colors -->
     <color name="material_amber50">#fffff8e1</color>
     <color name="material_amber100">#ffffecb3</color>
     <color name="material_amber200">#ffffe082</color>
@@ -28,4 +29,5 @@
     <color name="material_amberA200">#ffffd740</color>
     <color name="material_amberA400">#ffffc400</color>
     <color name="material_amberA700">#ffffab00</color>
+
 </resources>

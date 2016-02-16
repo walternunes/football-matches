@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Multi Swipe array colors -->
+    <array name="swipe_progress_colors">
+        <item>@color/accent</item>
+        <item>@color/second_accent</item>
+    </array>
+
+</resources>
