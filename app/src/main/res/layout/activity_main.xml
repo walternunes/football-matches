@@ -1,6 +1,6 @@
 <fragment
 android:id="@+id/fragment_scores_pager"
-android:name="jnuneslab.com.footballmatches.ScrollTabFragment"
+android:name="jnuneslab.com.footballmatches.ui.fragment.ScrollTabFragment"
 xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"

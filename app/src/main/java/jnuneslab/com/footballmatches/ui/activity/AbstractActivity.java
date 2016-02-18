@@ -1,4 +1,4 @@
-package jnuneslab.com.footballmatches;
+package jnuneslab.com.footballmatches.ui.activity;
 
 import android.support.annotation.LayoutRes;
 import android.support.v7.app.AppCompatActivity;

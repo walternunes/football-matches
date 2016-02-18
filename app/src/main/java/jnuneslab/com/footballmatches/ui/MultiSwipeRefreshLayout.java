@@ -1,4 +1,4 @@
-package jnuneslab.com.footballmatches;
+package jnuneslab.com.footballmatches.ui;
 
 
 import android.content.Context;

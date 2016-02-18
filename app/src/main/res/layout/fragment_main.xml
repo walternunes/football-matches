@@ -1,4 +1,4 @@
-<jnuneslab.com.footballmatches.MultiSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<jnuneslab.com.footballmatches.ui.MultiSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/swipe_refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -14,4 +14,4 @@
             android:layout_marginTop="@dimen/default_space_full" />
     </FrameLayout>
 
-</jnuneslab.com.footballmatches.MultiSwipeRefreshLayout>
+</jnuneslab.com.footballmatches.ui.MultiSwipeRefreshLayout>

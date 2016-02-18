@@ -1,9 +1,12 @@
-package jnuneslab.com.footballmatches;
+package jnuneslab.com.footballmatches.ui.activity;
 
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.PreferenceActivity;
 import java.util.Map;
+
+import jnuneslab.com.footballmatches.R;
+import jnuneslab.com.footballmatches.util.Util;
 
 /**
  * SettingsActivity class responsible for handle which leagues should be shown in Main Activity

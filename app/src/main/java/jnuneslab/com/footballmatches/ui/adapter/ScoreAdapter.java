@@ -1,4 +1,4 @@
-package jnuneslab.com.footballmatches;
+package jnuneslab.com.footballmatches.ui.adapter;
 
 import android.database.Cursor;
 import android.support.v4.app.Fragment;
@@ -8,6 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import jnuneslab.com.footballmatches.R;
+import jnuneslab.com.footballmatches.util.Util;
 
 /**
  * ScoreAdapter class responsible to handle all the matches information to be shown in each CardView

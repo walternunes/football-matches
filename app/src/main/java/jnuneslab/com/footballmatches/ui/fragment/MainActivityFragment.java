@@ -1,4 +1,4 @@
-package jnuneslab.com.footballmatches;
+package jnuneslab.com.footballmatches.ui.fragment;
 
 import android.database.Cursor;
 import android.support.v4.app.LoaderManager;
@@ -14,7 +14,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import jnuneslab.com.footballmatches.service.FetchScoreTask;
+import jnuneslab.com.footballmatches.ui.MultiSwipeRefreshLayout;
+import jnuneslab.com.footballmatches.R;
 import jnuneslab.com.footballmatches.data.MatchesContract;
+import jnuneslab.com.footballmatches.ui.adapter.ScoreAdapter;
 
 /**
  * Fragment used by Main Activity

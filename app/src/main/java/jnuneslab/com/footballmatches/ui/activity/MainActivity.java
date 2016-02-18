@@ -1,10 +1,13 @@
-package jnuneslab.com.footballmatches;
+package jnuneslab.com.footballmatches.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import jnuneslab.com.footballmatches.R;
+import jnuneslab.com.footballmatches.ui.fragment.ScrollTabFragment;
 
 /**
  * MainActivity class

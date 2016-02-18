@@ -1,4 +1,4 @@
-package jnuneslab.com.footballmatches;
+package jnuneslab.com.footballmatches.util;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -6,6 +6,7 @@ import android.database.Cursor;
 import java.util.HashMap;
 import java.util.Map;
 
+import jnuneslab.com.footballmatches.R;
 import jnuneslab.com.footballmatches.data.MatchesContract;
 
 /**

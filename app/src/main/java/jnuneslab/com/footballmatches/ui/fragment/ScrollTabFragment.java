@@ -1,4 +1,4 @@
-package jnuneslab.com.footballmatches;
+package jnuneslab.com.footballmatches.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import jnuneslab.com.footballmatches.R;
 
 /**
  * ScrollTabFragment class is responsible to handle the Pager menu (toolbar)

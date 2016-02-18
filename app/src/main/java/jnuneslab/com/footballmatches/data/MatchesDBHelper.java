@@ -74,12 +74,11 @@ public class MatchesDBHelper extends SQLiteOpenHelper {
      */
     private void populateLeague(SQLiteDatabase db){
 
-
-        db.execSQL("INSERT OR REPLACE INTO " + LeagueEntry.TABLE_NAME + " VALUES ( 362, 'Champions League'); ");
         db.execSQL("INSERT OR REPLACE INTO " + LeagueEntry.TABLE_NAME + " VALUES ( 394, 'BundesLiga'); ");
         db.execSQL("INSERT OR REPLACE INTO " + LeagueEntry.TABLE_NAME + " VALUES ( 398, 'Premier League'); ");
         db.execSQL("INSERT OR REPLACE INTO " + LeagueEntry.TABLE_NAME + " VALUES ( 399, 'Primeira Division'); ");
         db.execSQL("INSERT OR REPLACE INTO " + LeagueEntry.TABLE_NAME + " VALUES ( 401, 'Serie A'); ");
+        db.execSQL("INSERT OR REPLACE INTO " + LeagueEntry.TABLE_NAME + " VALUES ( 405, 'Champions League'); ");
        // db.execSQL("INSERT OR REPLACE INTO " + LeagueEntry.TABLE_NAME + " VALUES ( 402, 'Primera Liga'); ");
        // db.execSQL("INSERT OR REPLACE INTO " + LeagueEntry.TABLE_NAME + " VALUES ( 400, 'Segunda Division'); " );
        // db.execSQL("INSERT OR REPLACE INTO " + LeagueEntry.TABLE_NAME + " VALUES ( 395, 'BundesLiga'); " );

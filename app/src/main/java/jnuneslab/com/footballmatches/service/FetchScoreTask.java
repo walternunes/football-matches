@@ -1,4 +1,4 @@
-package jnuneslab.com.footballmatches;
+package jnuneslab.com.footballmatches.service;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -23,7 +23,9 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.Vector;
 
+import jnuneslab.com.footballmatches.R;
 import jnuneslab.com.footballmatches.data.MatchesContract;
+import jnuneslab.com.footballmatches.util.Util;
 
 
 /**
