@@ -1,18 +1,22 @@
 <resources>
 
     <!-- Application name -->
-    <string name="app_name">Football Matches</string>
+    <string translatable="false" name="app_name">Football Matches</string>
+
+    <!-- Description values -->
+    <string translatable="false" name="description_home">home</string>
+    <string translatable="false" name="description_away">away</string>
+    <string translatable="false" name="description_no_matches">no matches</string>
 
     <!-- Settings menu name -->
     <string name="action_settings">Settings</string>
+
+    <!-- Matches values -->
+    <string name="no_matches">There is no matches today.</string>
 
     <!-- Toolbar values -->
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>
     <string name="yesterday">Yesterday</string>
-
-    <!-- Description values -->
-    <string name="description_home">home</string>
-    <string name="description_away">away</string>
 
 </resources>

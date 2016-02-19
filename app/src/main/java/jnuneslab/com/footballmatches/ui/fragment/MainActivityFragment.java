@@ -13,6 +13,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import jnuneslab.com.footballmatches.service.FetchScoreTask;
 import jnuneslab.com.footballmatches.ui.MultiSwipeRefreshLayout;
@@ -28,7 +30,9 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     private ScoreAdapter mScoreAdapter;
     private MultiSwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
-    private String[] fragmentDate = new String[1];
+    private String[] mFragmentDate = new String[1];
+    private ImageView mNoMatchesImageView;
+    private TextView mNoMatchesTextView;
 
     public static final int SCORES_LOADER = 0;
 
@@ -38,8 +42,12 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
+        // Bind Image and Text to be shown when there is no matches
+        mNoMatchesImageView = (ImageView) rootView.findViewById(R.id.no_matches_img_view);
+        mNoMatchesTextView = (TextView) rootView.findViewById(R.id.no_matches_txt_view);
+
         //  Set the date passed from the arguments to this fragment
-        setFragmentDate(getArguments().getString(ScrollTabFragment.STATE_DATE_FRAGMENT));
+        setmFragmentDate(getArguments().getString(ScrollTabFragment.STATE_DATE_FRAGMENT));
 
         // Configure SwipeRefresh Layout
         mSwipeRefreshLayout = (MultiSwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh_layout);
@@ -61,8 +69,8 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
      * Setter Fragment Date
      * @param date - Date that identifies the fragment
      */
-    public void setFragmentDate(String date){
-            fragmentDate[0] = date;
+    public void setmFragmentDate(String date){
+            mFragmentDate[0] = date;
     }
 
     /**
@@ -88,11 +96,18 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         return new CursorLoader(getActivity(), MatchesContract.MatchesEntry.buildScoreWithDate(),
-                null, null, fragmentDate, null);
+                null, null, mFragmentDate, null);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+
+        // Check if it was not find matches in that day and set the text view visible
+        if(cursor.getCount() <= 0){
+            mNoMatchesImageView.setVisibility(View.VISIBLE);
+            mNoMatchesTextView.setVisibility(View.VISIBLE);
+        }
+
         cursor.moveToFirst();
         while (!cursor.isAfterLast()){
             cursor.moveToNext();

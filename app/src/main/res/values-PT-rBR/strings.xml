@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Settings menu name -->
+    <string name="action_settings">Configurações</string>
+
+    <!-- Matches values -->
+    <string name="no_matches">Não tem nenhuma partida hoje.</string>
+
+    <!-- Toolbar values -->
+    <string name="today">Hoje</string>
+    <string name="tomorrow">Amanha</string>
+    <string name="yesterday">Ontem</string>
+
+</resources>

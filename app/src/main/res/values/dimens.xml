@@ -17,6 +17,7 @@
 
     <!-- Default margin -->
     <dimen name="default_margin_content_full">16dp</dimen>
+    <dimen name="default_margin_content_half">8dp</dimen>
 
     <!-- Card spaces -->
     <dimen name="card_space_full">8dp</dimen>

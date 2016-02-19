@@ -12,6 +12,33 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/default_space_full" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/no_matches_img_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:contentDescription="@string/description_no_matches"
+                android:background="@drawable/img_no_matches"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/no_matches_txt_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/default_margin_content_full"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textSize="@dimen/text_size_medium"
+                android:text="@string/no_matches"
+                android:visibility="gone" />
+        </LinearLayout>
     </FrameLayout>
 
 </jnuneslab.com.footballmatches.ui.MultiSwipeRefreshLayout>
