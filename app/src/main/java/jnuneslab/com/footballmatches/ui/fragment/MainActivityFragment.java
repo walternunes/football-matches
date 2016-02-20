@@ -47,7 +47,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         mNoMatchesTextView = (TextView) rootView.findViewById(R.id.no_matches_txt_view);
 
         //  Set the date passed from the arguments to this fragment
-        setmFragmentDate(getArguments().getString(ScrollTabFragment.STATE_DATE_FRAGMENT));
+        setFragmentDate(getArguments().getString(ScrollTabFragment.STATE_DATE_FRAGMENT));
 
         // Configure SwipeRefresh Layout
         mSwipeRefreshLayout = (MultiSwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh_layout);
@@ -62,14 +62,28 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         // Bind the adapter
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(mScoreAdapter);
+
+        // Show no matches on create
+        showNoView(true);
+
         return rootView;
+    }
+
+    private void showNoView(boolean isShown){
+        if(isShown){
+            mNoMatchesImageView.setVisibility(View.VISIBLE);
+            mNoMatchesTextView.setVisibility(View.VISIBLE);
+        }else{
+            mNoMatchesImageView.setVisibility(View.GONE);
+            mNoMatchesTextView.setVisibility(View.GONE);
+        }
     }
 
     /**
      * Setter Fragment Date
      * @param date - Date that identifies the fragment
      */
-    public void setmFragmentDate(String date){
+    public void setFragmentDate(String date){
             mFragmentDate[0] = date;
     }
 
@@ -102,11 +116,9 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
 
-        // Check if it was not find matches in that day and set the text view visible
-        if(cursor.getCount() <= 0){
-            mNoMatchesImageView.setVisibility(View.VISIBLE);
-            mNoMatchesTextView.setVisibility(View.VISIBLE);
-        }
+        // Check if it was find matches in that day and make the TextView gone
+        if(cursor.getCount() > 0)
+          showNoView(false);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()){
@@ -121,6 +133,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
         mScoreAdapter.swapCursor(null);
+        showNoView(true);
         postRefreshing(false);
     }
 

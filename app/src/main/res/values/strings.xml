@@ -12,11 +12,14 @@
     <string name="action_settings">Settings</string>
 
     <!-- Matches values -->
-    <string name="no_matches">There is no matches today.</string>
+    <string name="no_matches">There are no matches today.</string>
 
     <!-- Toolbar values -->
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>
     <string name="yesterday">Yesterday</string>
+
+    <!-- Widget title -->
+    <string name="widget_title">Today matches</string>
 
 </resources>

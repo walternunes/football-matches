@@ -2,6 +2,7 @@ package jnuneslab.com.footballmatches.service;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -33,7 +34,11 @@ import jnuneslab.com.footballmatches.util.Util;
  */
 public class FetchScoreTask extends AsyncTask<Void, Void, Void> {
 
+    // Log Tag
     public static final String LOG_TAG = FetchScoreTask.class.getSimpleName();
+
+    // Broadcast sent when matches fetch is done
+    public static final String BROADCAST_MATCHES_UPDATED = "jnuneslab.com.footballmatches.BROADCAST_MATCHES_UPDATED";
     private final Context mContext;
 
     /**
@@ -265,6 +270,7 @@ public class FetchScoreTask extends AsyncTask<Void, Void, Void> {
             int insertedRows = mContext.getContentResolver().bulkInsert(
                     MatchesContract.BASE_CONTENT_URI, insert_data);
 
+            mContext.sendBroadcast(new Intent(BROADCAST_MATCHES_UPDATED).setPackage(mContext.getPackageName()));
             Log.v(LOG_TAG, "Successfully Inserted : " + String.valueOf(insertedRows));
         } catch (JSONException e) {
             Log.e(LOG_TAG, "JSON Exception: " + e.getMessage());

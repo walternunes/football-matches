@@ -33,6 +33,12 @@
     <dimen name="image_size_large_score_width">72dp</dimen>
     <dimen name="image_size_large_score_height">72dp</dimen>
 
+    <!-- Widget dimen sizes -->
+    <dimen name="widget_default_initial_height">250dp</dimen>
+    <dimen name="widget_default_initial_width">250dp</dimen>
+    <dimen name="widget_default_resize_height">180dp</dimen>
+    <dimen name="widget_default_resize_width">250dp</dimen>
+
     <!-- Text dimen sizes -->
     <dimen name="text_size_large_score">28sp</dimen>
     <dimen name="text_size_medium">18sp</dimen>
