@@ -21,6 +21,27 @@ public final class Util {
     // Map containing all Image resources Id, the key of map is the name of team given by the API
     private static final Map<String, Integer> mapTeamImages = new HashMap<>();
 
+    // Projection query interface
+    public interface MatchesQuery {
+        String[] PROJECTION = {
+                MatchesContract.MatchesEntry.COLUMN_MATCH_ID,
+                MatchesContract.MatchesEntry.COLUMN_TIME,
+                MatchesContract.MatchesEntry.COLUMN_HOME_TEAM,
+                MatchesContract.MatchesEntry.COLUMN_AWAY_TEAM,
+                MatchesContract.MatchesEntry.COLUMN_HOME_GOALS,
+                MatchesContract.MatchesEntry.COLUMN_AWAY_GOALS,
+                MatchesContract.LeagueEntry.COLUMN_LEAGUE_NAME
+        };
+
+        int MATCH_ID = 0;
+        int MATCH_START_TIME = 1;
+        int HOME_NAME = 2;
+        int AWAY_NAME = 3;
+        int HOME_GOALS = 4;
+        int AWAY_GOALS = 5;
+        int LEAGUE_NAME = 6;
+    }
+
     // Insert all the values into mapTeamImages HashMap. This is inserted only one time
     static{
 
@@ -143,7 +164,7 @@ public final class Util {
 
         // Case the params are -1, it means the game has not been played yet
         if (homeGoals < 0 || awayGoals < 0) {
-            return "? - ?";
+            return "  -  ";
         } else {
             return String.valueOf(homeGoals) + " - " + String.valueOf(awayGoals);
         }

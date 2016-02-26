@@ -26,15 +26,18 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textColor="@color/cardview_shadow_start_color"
         tools:text="Championship league" />
 
     <TextView
-        android:id="@+id/widget_item_matchday"
+        android:id="@+id/widget_item_matchtime"
+        android:layout_margin="@dimen/default_margin_content_half"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        tools:text="Match day: 2" />
+        android:textColor="@color/cardview_dark_background"
+        android:text="09:00"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -64,7 +67,8 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                tools:text="Barcelona" />
+                android:textColor="@color/cardview_dark_background"
+                tools:ignore="NewApi"/>
 
         </LinearLayout>
 
@@ -74,8 +78,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            android:textColor="@color/accent"
-            tools:text="6 - 1" />
+            android:textColor="@color/second_accent"  />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -89,7 +92,6 @@
                 android:layout_width="72dp"
                 android:layout_height="72dp"
                 android:layout_gravity="center"
-                android:contentDescription="fsdfa"
                 tools:src="@android:color/darker_gray" />
 
             <TextView
@@ -98,8 +100,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                tools:text="Manchester" />
+                android:textColor="@color/cardview_dark_background"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"  />
 
         </LinearLayout>
 

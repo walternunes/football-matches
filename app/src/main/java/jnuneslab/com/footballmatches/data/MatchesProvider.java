@@ -205,11 +205,13 @@ public class MatchesProvider extends ContentProvider {
         // Delete all rows
         switch (matchURI(uri)) {
             case MATCHES:
-                rowsDeleted = db.delete(MatchesContract.MatchesEntry.TABLE_NAME, null, selectionArgs);
+                rowsDeleted = db.delete(MatchesContract.MatchesEntry.TABLE_NAME, null, null);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
+
+        getContext().getContentResolver().notifyChange(uri, null);
         return rowsDeleted;
     }
 }

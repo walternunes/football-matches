@@ -1,4 +1,4 @@
-package jnuneslab.com.footballmatches.ui.widget;
+package jnuneslab.com.footballmatches.widget;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -22,24 +22,6 @@ import jnuneslab.com.footballmatches.util.Util;
 public final class WidgetRemoteViewService extends RemoteViewsService {
     public static final String TAG = WidgetRemoteViewService.class.getSimpleName();
 
-    private interface MatchesQuery {
-        String[] PROJECTION = {
-                MatchesContract.LeagueEntry.COLUMN_LEAGUE_NAME,
-                MatchesContract.MatchesEntry.COLUMN_HOME_TEAM,
-                MatchesContract.MatchesEntry.COLUMN_AWAY_TEAM,
-                MatchesContract.MatchesEntry.COLUMN_HOME_GOALS,
-                MatchesContract.MatchesEntry.COLUMN_AWAY_GOALS,
-                MatchesContract.MatchesEntry.COLUMN_MATCH_ID
-        };
-
-        int LEAGUE = 0;
-        int HOME = 1;
-        int AWAY = 2;
-        int HOME_GOALS = 3;
-        int AWAY_GOALS = 4;
-        int MATCH_ID = 5;
-    }
-
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
         return new RemoteViewsFactory() {
@@ -57,17 +39,16 @@ public final class WidgetRemoteViewService extends RemoteViewsService {
                     mCursor.close();
                 }
 
-                // Call clear identity in order to able to call the provider from remoteView once the provider is not exported neither grantURIpermission
+                // Call clear identity in order to be able to call the provider from remoteView once the provider is not exported neither grantURIpermission
                 final long identityToken = Binder.clearCallingIdentity();
                 Uri uri = MatchesContract.MatchesEntry.buildScoreWithDate();
 
                 // Formatting date
-                String formatString = "yyyy-MM-dd";
-                SimpleDateFormat format = new SimpleDateFormat(formatString);
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                 String todayDate = format.format(new Date());
 
                 mCursor = getContentResolver().query(uri,
-                        MatchesQuery.PROJECTION,
+                        Util.MatchesQuery.PROJECTION,
                         null,
                         new String[]{todayDate},
                         null);
@@ -97,22 +78,24 @@ public final class WidgetRemoteViewService extends RemoteViewsService {
                 }
                 final RemoteViews views = new RemoteViews(getPackageName(), R.layout.widget_scores_list_item);
 
-                String homeTeamName = mCursor.getString(MatchesQuery.HOME);
-                String awayTeamName = mCursor.getString(MatchesQuery.AWAY);
-                String league = mCursor.getString(MatchesQuery.LEAGUE);
+                String homeTeamName = mCursor.getString(Util.MatchesQuery.HOME_NAME);
+                String awayTeamName = mCursor.getString(Util.MatchesQuery.AWAY_NAME);
+                String league = mCursor.getString(Util.MatchesQuery.LEAGUE_NAME);
+                String matchTime = mCursor.getString(Util.MatchesQuery.MATCH_START_TIME);
                 String score = Util.getScores(
-                        mCursor.getInt(MatchesQuery.HOME_GOALS), mCursor.getInt(MatchesQuery.AWAY_GOALS));
+                        mCursor.getInt(Util.MatchesQuery.HOME_GOALS), mCursor.getInt(Util.MatchesQuery.AWAY_GOALS));
 
                 // Set text views
                 views.setTextViewText(R.id.widget_item_league, league);
                 views.setTextViewText(R.id.widget_item_home_name, homeTeamName);
                 views.setTextViewText(R.id.widget_item_away_name, awayTeamName);
                 views.setTextViewText(R.id.widget_item_score, score);
+                views.setTextViewText(R.id.widget_item_matchtime, matchTime);
 
                 // Set images views
                 views.setImageViewResource(R.id.widget_item_home_crest, Util.getTeamCrestByTeamName(homeTeamName));
                 views.setImageViewResource(R.id.widget_item_away_crest, Util.getTeamCrestByTeamName(awayTeamName));
-                /*
+
                 // Set content descriptions for accessibility
                 views.setContentDescription(R.id.widget_item_home_crest, homeTeamName);
                 views.setContentDescription(R.id.widget_item_away_crest, awayTeamName);
@@ -120,7 +103,7 @@ public final class WidgetRemoteViewService extends RemoteViewsService {
                 views.setContentDescription(R.id.widget_item_away_name, awayTeamName);
                 views.setContentDescription(R.id.widget_item_league, league);
                 views.setContentDescription(R.id.widget_item_score, score);
-*/
+
                 return views;
             }
 
@@ -131,13 +114,14 @@ public final class WidgetRemoteViewService extends RemoteViewsService {
 
             @Override
             public int getViewTypeCount() {
+                // Return only one view once it will shown only Today matches
                 return 1;
             }
 
             @Override
             public long getItemId(int position) {
                 if (mCursor.moveToPosition(position))
-                    return mCursor.getLong(MatchesQuery.MATCH_ID);
+                    return mCursor.getLong(Util.MatchesQuery.MATCH_ID);
                 return position;
             }
 

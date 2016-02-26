@@ -59,7 +59,7 @@
 
         <!-- Widget remote view service  -->
         <service
-            android:name=".ui.widget.WidgetRemoteViewService"
+            android:name=".widget.WidgetRemoteViewService"
             android:enabled="true"
             android:exported="false"
             android:permission="android.permission.BIND_REMOTEVIEWS" />

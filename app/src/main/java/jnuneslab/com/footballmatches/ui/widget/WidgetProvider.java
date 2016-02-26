@@ -12,6 +12,7 @@ import android.widget.RemoteViews;
 import jnuneslab.com.footballmatches.R;
 import jnuneslab.com.footballmatches.service.FetchScoreTask;
 import jnuneslab.com.footballmatches.ui.activity.MainActivity;
+import jnuneslab.com.footballmatches.widget.WidgetRemoteViewService;
 
 public class WidgetProvider extends AppWidgetProvider {
 

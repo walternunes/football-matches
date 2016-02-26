@@ -260,7 +260,7 @@ public class FetchScoreTask extends AsyncTask<Void, Void, Void> {
                     values.add(matchValues);
 
                     //log spam
-                    //Log.v(LOG_TAG, "MatchID: " + sMatchId + " \nDate: " + sDate + " \nTime: " + sTime + " \nHome: " + sHome + " \nAway: " + sAway + " \nHomeGoals: " + sHomeGoals + " \nAwayGoals: " + sAwayGoals + " \nLeague: " + sLeague);
+                    Log.v(LOG_TAG, "MatchID: " + sMatchId + " \nDate: " + sDate + " \nTime: " + sTime + " \nHome: " + sHome + " \nAway: " + sAway + " \nHomeGoals: " + sHomeGoals + " \nAwayGoals: " + sAwayGoals + " \nLeague: " + sLeague);
                 }
             }
 
@@ -270,6 +270,7 @@ public class FetchScoreTask extends AsyncTask<Void, Void, Void> {
             int insertedRows = mContext.getContentResolver().bulkInsert(
                     MatchesContract.BASE_CONTENT_URI, insert_data);
 
+            // Send broadcast to be catch by the widget
             mContext.sendBroadcast(new Intent(BROADCAST_MATCHES_UPDATED).setPackage(mContext.getPackageName()));
             Log.v(LOG_TAG, "Successfully Inserted : " + String.valueOf(insertedRows));
         } catch (JSONException e) {

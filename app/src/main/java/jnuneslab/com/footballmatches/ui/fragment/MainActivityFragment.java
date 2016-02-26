@@ -10,6 +10,8 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,7 @@ import jnuneslab.com.footballmatches.ui.MultiSwipeRefreshLayout;
 import jnuneslab.com.footballmatches.R;
 import jnuneslab.com.footballmatches.data.MatchesContract;
 import jnuneslab.com.footballmatches.ui.adapter.ScoreAdapter;
+import jnuneslab.com.footballmatches.util.Util;
 
 /**
  * Fragment used by Main Activity
@@ -69,6 +72,10 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         return rootView;
     }
 
+    /**
+     * Method responsible for show the view telling there is no matches in that day
+     * @param isShown - boolean
+     */
     private void showNoView(boolean isShown){
         if(isShown){
             mNoMatchesImageView.setVisibility(View.VISIBLE);
@@ -110,7 +117,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         return new CursorLoader(getActivity(), MatchesContract.MatchesEntry.buildScoreWithDate(),
-                null, null, mFragmentDate, null);
+                Util.MatchesQuery.PROJECTION, null, mFragmentDate,  MatchesContract.LeagueEntry.COLUMN_LEAGUE_NAME + " DESC");
     }
 
     @Override
@@ -119,12 +126,6 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         // Check if it was find matches in that day and make the TextView gone
         if(cursor.getCount() > 0)
           showNoView(false);
-
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()){
-            cursor.moveToNext();
-        }
-
         // Swap the cursor and cancel the refresh icon
         mScoreAdapter.swapCursor(cursor);
         postRefreshing(false);
@@ -137,7 +138,6 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         postRefreshing(false);
     }
 
-
     @Override
     public boolean canSwipeRefreshChildScrollUp() {
         return mRecyclerView != null && ViewCompat.canScrollVertically(mRecyclerView, -1);
@@ -146,8 +146,14 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     @Override
     public void onRefresh() {
 
-        // First delete old values from DB and request to fetch new data
+        // First delete old values from DB
         getContext().getContentResolver().delete(MatchesContract.BASE_CONTENT_URI, null,null);
+
+        // Refresh the views
+        mRecyclerView.removeAllViews();
+        mScoreAdapter.swapCursor(null);
+
+        // Fetch new data
         new FetchScoreTask(getContext()).execute();
     }
 }
