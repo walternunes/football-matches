@@ -1,7 +1,9 @@
 package jnuneslab.com.footballmatches.util;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +22,15 @@ public final class Util {
 
     // Map containing all Image resources Id, the key of map is the name of team given by the API
     private static final Map<String, Integer> mapTeamImages = new HashMap<>();
+
+    // Map containing all Flag Image resources Id, the key of map is the name of the league given by the API
+    private static final Map<String, Integer> mapFlagImages = new HashMap<>();
+
+    // Shared Preferences name
+    private static String PREF_UPDATE_DATE = "FootballMatchesDatePref";
+
+    // Value that register the date when it was made last Fetch
+    private static String LAST_UPDATE_VALUE = "lastUpdate";
 
     // Projection query interface
     public interface MatchesQuery {
@@ -132,6 +143,13 @@ public final class Util {
         mapTeamImages.put("West Bromwich Albion FC", R.drawable.img_west_bromwich_albion);
         mapTeamImages.put("Manchester City FC", R.drawable.img_manchester_city);
 
+
+        // Map league flags
+        mapFlagImages.put("BundesLiga", R.drawable.de);
+        mapFlagImages.put("Premier League", R.drawable.en);
+        mapFlagImages.put("Primeira Division", R.drawable.es);
+        mapFlagImages.put("Serie A", R.drawable.it);
+        mapFlagImages.put("Champions League", R.drawable.eu);
     }
 
     /**
@@ -186,4 +204,61 @@ public final class Util {
 
     }
 
+    /**
+     * Method responsible for get the team crest resource image Id
+     * @param leagueName - Name of league that is the key of the hashMap
+     * @return - int - that is the resource id image
+     */
+    public static int getFlagByLeagueName(String leagueName) {
+
+        Integer resourceId = mapFlagImages.get(leagueName);
+
+        // Check if the name is contained in HashMap (already loaded), otherwise return default pic
+        if(resourceId != null){
+            return resourceId;
+        }else return   R.drawable.img_no_photo_icon;
+
+    }
+
+    /**
+     * Method responsible for get the team crest resource image Id
+     * @param leagueName - Name of league that is the key of the hashMap
+     * @return - int - that is the resource id image
+     */
+    public static String getFlagDescriptionByLeague(Context context, String leagueName) {
+
+        switch (leagueName){
+            case "Champions League": return context.getResources().getString(R.string.flag_champions_league);
+            case "Serie A": return context.getResources().getString(R.string.flag_italy);
+            case "Primeira Division": return context.getResources().getString(R.string.flag_spain);
+            case "BundesLiga": return context.getResources().getString(R.string.flag_germany);
+            case "Premier League": return context.getResources().getString(R.string.flag_england);
+            default: return context.getResources().getString(R.string.flag_unknown);
+        }
+    }
+
+    /**
+     * Method responsible for insert/update the value of the date when it was done the last Fetch
+     * @param context
+     */
+    public static void writeLastUpdatePref(Context context){
+        SharedPreferences.Editor editor = context.getSharedPreferences(PREF_UPDATE_DATE, Context.MODE_PRIVATE).edit();
+        editor.putLong(LAST_UPDATE_VALUE, System.currentTimeMillis());
+        editor.commit();
+    }
+
+    /**
+     * Method responsible for read the shared preferences and check if current date is higher than 12 hours from the last update
+     * @param context  - Application context
+     * @return boolean - true if it is necessary to make a new Fetch
+     */
+    public static boolean readLastUpdatePref(Context context){
+        SharedPreferences pref = context.getSharedPreferences(PREF_UPDATE_DATE, Context.MODE_PRIVATE);
+        long lastUpdate = pref.getLong(LAST_UPDATE_VALUE, -1);
+
+        // Check if the shared preferences exists or if the current date is higher than 12 hours from the last update
+        if(lastUpdate == -1 || (System.currentTimeMillis() - lastUpdate) > 43200000 ){
+            return true;
+        }else return false;
+    }
 }

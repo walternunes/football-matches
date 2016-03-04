@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Binder;
-import android.util.Log;
 import android.widget.AdapterView;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -17,10 +16,9 @@ import jnuneslab.com.footballmatches.data.MatchesContract;
 import jnuneslab.com.footballmatches.util.Util;
 
 /**
- * Created by Walter on 20/02/2016.
+ * WidgetRemoteViewService class responsible for receive the broadcast from the FetchMatchService and update the widget view
  */
 public final class WidgetRemoteViewService extends RemoteViewsService {
-    public static final String TAG = WidgetRemoteViewService.class.getSimpleName();
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
@@ -29,7 +27,6 @@ public final class WidgetRemoteViewService extends RemoteViewsService {
 
             @Override
             public void onCreate() {
-                Log.d(TAG, "onCreate");
             }
 
             @Override
@@ -44,9 +41,10 @@ public final class WidgetRemoteViewService extends RemoteViewsService {
                 Uri uri = MatchesContract.MatchesEntry.buildScoreWithDate();
 
                 // Formatting date
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat format = new SimpleDateFormat(getApplicationContext().getResources().getString(R.string.date_format_simple));
                 String todayDate = format.format(new Date());
 
+                // Query the matches of the current date
                 mCursor = getContentResolver().query(uri,
                         Util.MatchesQuery.PROJECTION,
                         null,

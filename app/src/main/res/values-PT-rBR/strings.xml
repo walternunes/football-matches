@@ -12,4 +12,15 @@
     <string name="tomorrow">Amanha</string>
     <string name="yesterday">Ontem</string>
 
+    <!-- Widget title -->
+    <string name="widget_title">Jogos hoje</string>
+
+    <!-- Country flag description -->
+    <string name="flag_germany">Alemanha</string>
+    <string name="flag_italy">Italia</string>
+    <string name="flag_spain">Espanha</string>
+    <string name="flag_england">Inglaterra</string>
+    <string name="flag_champions_league">Champions League</string>
+    <string name="flag_unknown">Desconhecido</string>
+
 </resources>

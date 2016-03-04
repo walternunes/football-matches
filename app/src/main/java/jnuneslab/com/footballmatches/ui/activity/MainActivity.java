@@ -7,7 +7,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import jnuneslab.com.footballmatches.R;
+import jnuneslab.com.footballmatches.data.MatchesContract;
+import jnuneslab.com.footballmatches.service.FetchScoreTask;
 import jnuneslab.com.footballmatches.ui.fragment.ScrollTabFragment;
+import jnuneslab.com.footballmatches.util.Util;
 
 /**
  * MainActivity class
@@ -28,6 +31,13 @@ public class MainActivity extends AbstractActivity {
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
          mScrollTabFragment = (ScrollTabFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_scores_pager);
+
+        if(Util.readLastUpdatePref(getApplicationContext())){
+            getApplicationContext().getContentResolver().delete(MatchesContract.BASE_CONTENT_URI, null, null);
+
+            // Fetch new data
+            new FetchScoreTask(getApplicationContext()).execute();
+        }
     }
 
     @Override

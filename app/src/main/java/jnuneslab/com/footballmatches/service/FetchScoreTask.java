@@ -217,11 +217,11 @@ public class FetchScoreTask extends AsyncTask<Void, Void, Void> {
                     sDate = match_data.getString(API_MATCH_DATE);
                     sTime = sDate.substring(sDate.indexOf("T") + 1, sDate.indexOf("Z"));
                     sDate = sDate.substring(0, sDate.indexOf("T"));
-                    SimpleDateFormat match_date = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
+                    SimpleDateFormat match_date = new SimpleDateFormat(mContext.getString(R.string.date_format_complete));
                     match_date.setTimeZone(TimeZone.getTimeZone("UTC"));
                     try {
                         Date parsedDate = match_date.parse(sDate + sTime);
-                        SimpleDateFormat newDate = new SimpleDateFormat("yyyy-MM-dd:HH:mm");
+                        SimpleDateFormat newDate = new SimpleDateFormat(mContext.getString(R.string.date_format_detailed));
                         newDate.setTimeZone(TimeZone.getDefault());
                         sDate = newDate.format(parsedDate);
                         sTime = sDate.substring(sDate.indexOf(":") + 1);
@@ -230,8 +230,8 @@ public class FetchScoreTask extends AsyncTask<Void, Void, Void> {
                         // If it is not real, changes the dummy data's date to match our current date range.
                         if (!isReal) {
                             Date fragmentDate = new Date(System.currentTimeMillis() + ((i - 2) * 86400000));
-                            SimpleDateFormat mformat = new SimpleDateFormat("yyyy-MM-dd");
-                            sDate = mformat.format(fragmentDate);
+                            SimpleDateFormat dateFormat = new SimpleDateFormat(mContext.getString(R.string.date_format_simple));
+                            sDate = dateFormat.format(fragmentDate);
                         }
                     } catch (Exception e) {
                         Log.e(LOG_TAG, "error parsing date" + e.getMessage());
@@ -272,6 +272,9 @@ public class FetchScoreTask extends AsyncTask<Void, Void, Void> {
 
             // Send broadcast to be catch by the widget
             mContext.sendBroadcast(new Intent(BROADCAST_MATCHES_UPDATED).setPackage(mContext.getPackageName()));
+
+            // Register the last date that was updated in shared preferences
+            Util.writeLastUpdatePref(mContext);
             Log.v(LOG_TAG, "Successfully Inserted : " + String.valueOf(insertedRows));
         } catch (JSONException e) {
             Log.e(LOG_TAG, "JSON Exception: " + e.getMessage());

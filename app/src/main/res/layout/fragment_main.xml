@@ -11,7 +11,7 @@
             android:id="@+id/score_list_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/default_space_full" />
+             />
 
         <LinearLayout
             android:layout_width="match_parent"

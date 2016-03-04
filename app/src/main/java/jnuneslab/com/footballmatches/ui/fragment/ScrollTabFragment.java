@@ -73,7 +73,7 @@ public final class ScrollTabFragment extends Fragment {
         // Create a new fragment and calculate the date time for each tab
         for (int i = 0; i < NUM_PAGES; i++) {
             Date fragmentDate = new Date(System.currentTimeMillis() + ((i - 2) * 86400000));
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat dateFormat = new SimpleDateFormat(getContext().getString(R.string.date_format_simple));
             viewFragments[i] = ScrollTabFragment.newInstance(dateFormat.format(fragmentDate));
         }
 

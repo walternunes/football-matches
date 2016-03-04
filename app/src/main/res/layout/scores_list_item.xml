@@ -11,16 +11,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:orientation="vertical"
-        android:padding="@dimen/default_padding_half">
+        android:orientation="horizontal"
+        android:background="@color/material_amber200"
+        >
+
+        <ImageView
+            android:id="@+id/country_flag"
+            android:layout_width="@dimen/image_size_flag_width"
+            android:layout_height="@dimen/image_size_flag_height"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/margin_flag_small" />
 
         <TextView
             android:id="@+id/league_textview"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:padding="@dimen/default_padding_half"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            android:textSize="@dimen/text_size_medium" />
+            android:textSize="@dimen/text_size_medium"
+            android:layout_marginRight="@dimen/margin_flag_full" />
 
     </LinearLayout>
 

@@ -8,6 +8,11 @@
     <string translatable="false" name="description_away">away</string>
     <string translatable="false" name="description_no_matches">no matches</string>
 
+    <!-- Date formats -->
+    <string translatable="false" name="date_format_simple">yyyy-MM-dd</string>
+    <string translatable="false" name="date_format_detailed">yyyy-MM-dd:HH:mm</string>
+    <string translatable="false" name="date_format_complete">yyyy-MM-ddHH:mm:ss</string>
+
     <!-- Settings menu name -->
     <string name="action_settings">Settings</string>
 
@@ -21,5 +26,13 @@
 
     <!-- Widget title -->
     <string name="widget_title">Today matches</string>
+
+    <!-- Country flag description -->
+    <string name="flag_germany">Germany</string>
+    <string name="flag_italy">Italy</string>
+    <string name="flag_spain">Spain</string>
+    <string name="flag_england">England</string>
+    <string name="flag_champions_league">Champions League</string>
+    <string name="flag_unknown">Unknown</string>
 
 </resources>

@@ -129,6 +129,7 @@ public class MatchesProvider extends ContentProvider {
 
         switch (match) {
             case MATCHES:
+                sortOrder = MatchesContract.LeagueEntry.COLUMN_LEAGUE_NAME + " DESC";
                 retCursor = sMatcheByLeagueQueryBuilder.query(
                         mOpenHelper.getReadableDatabase(),
                         projection, null, null, null, null, sortOrder);
@@ -139,16 +140,19 @@ public class MatchesProvider extends ContentProvider {
                         projection, null, selectionArgs, null, null, sortOrder);
                 break;
             case MATCHES_WITH_DATE:
+                sortOrder = MatchesContract.LeagueEntry.COLUMN_LEAGUE_NAME + " DESC";
                 retCursor = sMatcheByLeagueQueryBuilder.query(
                         mOpenHelper.getReadableDatabase(),
                         projection, SCORES_BY_DATE, selectionArgs, null, null, sortOrder);
                 break;
             case MATCHES_WITH_ID:
+                sortOrder = MatchesContract.LeagueEntry.COLUMN_LEAGUE_NAME + " DESC";
                 retCursor = sMatcheByLeagueQueryBuilder.query(
                         mOpenHelper.getReadableDatabase(),
                         projection, SCORES_BY_ID, selectionArgs, null, null, sortOrder);
                 break;
             case MATCHES_WITH_LEAGUE:
+                sortOrder = MatchesContract.LeagueEntry.COLUMN_LEAGUE_NAME + " DESC";
                 retCursor = sMatcheByLeagueQueryBuilder.query(
                        mOpenHelper.getReadableDatabase(),
                        projection, SCORES_BY_LEAGUE, selectionArgs, null, null, sortOrder);
