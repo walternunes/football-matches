@@ -1,8 +1,25 @@
-# README #
+# **Football Matches application** #
+Football Matches is an application that shows the results of the most important football leagues of the Europe like: Premier League, Champions League, Primeira Division, Serie A, BundesLiga.
 
-Application that will show the results and the next matches of the most important football leagues of the world.
+# **Contents and features** #
+## Things that is possible to do in the app: ##
+* Show all the games (and results) from two days before or two days after the current day
+* Possible to select what leagues that you want to follow (Premier League, Champions League, Primeira Division, Serie A, BundesLiga)
+* Accessibility compatibility  (talkback)
+* Widget in Home Screen capable to show all the games of the day
 
-Under development.
+## Technical information: ##
+* Usage of cache logic and content provider
+* Usage of MultiSwipeRefreshLayout to update contents
+* Usage of RecyclerView, tabLayout and MirrorLayout
+
+# **Set up the project** #
+In order to build this project is necessary to have an API key. If you don't have one please register and request your own API key here: http://api.football-data.org. Next you will need to add a String named "api_key" into your resources file that could be a new XML file or the String.xml itself. According to the bellow example: <string name="api_key" translatable="false">your_key_here</string>
+
+# **Screens** #
+## Portrait layout ##
+
+![f2.png](https://bitbucket.org/repo/pqjbaX/images/718662322-f2.png)
 
 ### Additional info ###
 
