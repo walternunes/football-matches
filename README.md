@@ -7,6 +7,7 @@ Football Matches is an application that shows the results of the most important 
 * Possible to select what leagues that you want to follow (Premier League, Champions League, Primeira Division, Serie A, BundesLiga)
 * Accessibility compatibility  (talkback)
 * Widget in Home Screen capable to show all the games of the day
+* Multi Language support (en, es, pt, it, de)
 
 ## Technical information: ##
 * Usage of cache logic and content provider
