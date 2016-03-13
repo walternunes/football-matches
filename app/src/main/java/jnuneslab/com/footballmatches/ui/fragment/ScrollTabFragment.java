@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.format.Time;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +43,7 @@ public final class ScrollTabFragment extends Fragment {
      * @param date - String containing the date
      * @return - The instance of the MainActivityFragment
      */
-    public static MainActivityFragment newInstance(String date) {
+    private static MainActivityFragment newInstance(String date) {
 
         // Create a bundle and add the date into it
         Bundle args = new Bundle();
@@ -52,6 +53,21 @@ public final class ScrollTabFragment extends Fragment {
         MainActivityFragment fragment = new MainActivityFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    /**
+     * Method responsible for create each instance of each page. This method should be called in order to refresh the title and the content when the day is updated
+     */
+    private void bindFragmentInPager(){
+        // Create a new fragment and calculate the date time for each tab
+        for (int i = 0; i < NUM_PAGES; i++) {
+            Date fragmentDate = new Date(System.currentTimeMillis() + ((i - 2) * 86400000));
+            SimpleDateFormat dateFormat = new SimpleDateFormat(getContext().getString(R.string.date_format_simple));
+            viewFragments[i] = ScrollTabFragment.newInstance(dateFormat.format(fragmentDate));
+        }
+
+        mTabLayout.setTabsFromPagerAdapter(mPagerScrollAdapter);
+        mViewPager.setCurrentItem(TODAY_POSITION);
     }
 
     @Override
@@ -68,15 +84,6 @@ public final class ScrollTabFragment extends Fragment {
         mViewPager = (ViewPager) view.findViewById(R.id.pager);
         mTabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
 
-        mTabLayout.setTabsFromPagerAdapter(mPagerScrollAdapter);
-
-        // Create a new fragment and calculate the date time for each tab
-        for (int i = 0; i < NUM_PAGES; i++) {
-            Date fragmentDate = new Date(System.currentTimeMillis() + ((i - 2) * 86400000));
-            SimpleDateFormat dateFormat = new SimpleDateFormat(getContext().getString(R.string.date_format_simple));
-            viewFragments[i] = ScrollTabFragment.newInstance(dateFormat.format(fragmentDate));
-        }
-
         // Set the listener to be able to change the tabs by clicking in the item directly (without swipe)
         mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -85,17 +92,46 @@ public final class ScrollTabFragment extends Fragment {
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {  }
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {  }
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
         });
 
         // Set initial values in ViewPager
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
         mViewPager.setOffscreenPageLimit(NUM_PAGES);
         mViewPager.setAdapter(mPagerScrollAdapter);
-        mViewPager.setCurrentItem(TODAY_POSITION);
+
+        // Create the fragments for each page
+        bindFragmentInPager();
+
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Get the current day that is marked as Today in the pager
+        String currentInstanceDay = viewFragments[TODAY_POSITION].getFragmentDate();
+        if (currentInstanceDay != null) {
+
+            // Format the application current day and the real current day
+            currentInstanceDay = currentInstanceDay.substring(currentInstanceDay.length() - 2);
+            SimpleDateFormat dateFormat = new SimpleDateFormat(getContext().getString(R.string.date_format_day));
+            String currentDay = dateFormat.format(System.currentTimeMillis());
+
+            // Check if the current application is really the current day
+            if (!currentInstanceDay.equals(currentDay)) {
+
+                // Refresh the pager and fragments because it is necessary to update the dates
+                bindFragmentInPager();
+                mPagerScrollAdapter.notifyDataSetChanged();
+            }
+        }
     }
 
     /**
@@ -113,6 +149,11 @@ public final class ScrollTabFragment extends Fragment {
         }
 
         @Override
+        public int getItemPosition(Object item) {
+            return POSITION_NONE;
+        }
+
+        @Override
         public Fragment getItem(int i) {
             return viewFragments[i];
         }
@@ -121,7 +162,6 @@ public final class ScrollTabFragment extends Fragment {
         public int getCount() {
             return NUM_PAGES;
         }
-
 
         /**
          * Returns the page title for the top indicator
@@ -157,11 +197,8 @@ public final class ScrollTabFragment extends Fragment {
             } else if (julianDay == currentJulianDay - 1) {
                 return context.getString(R.string.yesterday);
             } else {
-                Time time = new Time();
-                time.setToNow();
-
                 // Day format is set according to the week name (monday, tuesday ...)
-                SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE");
+                SimpleDateFormat dayFormat = new SimpleDateFormat(getContext().getString(R.string.date_format_week));
                 return dayFormat.format(dateInMillis);
             }
         }

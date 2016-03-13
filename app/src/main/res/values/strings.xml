@@ -9,6 +9,8 @@
     <string translatable="false" name="description_no_matches">no matches</string>
 
     <!-- Date formats -->
+    <string translatable="false" name="date_format_day">dd</string>
+    <string translatable="false" name="date_format_week">EEEE</string>
     <string translatable="false" name="date_format_simple">yyyy-MM-dd</string>
     <string translatable="false" name="date_format_detailed">yyyy-MM-dd:HH:mm</string>
     <string translatable="false" name="date_format_complete">yyyy-MM-ddHH:mm:ss</string>

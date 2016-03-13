@@ -92,6 +92,13 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     }
 
     /**
+     * Getter Fragment Date
+     */
+    public String getFragmentDate(){
+       return mFragmentDate[0];
+    }
+
+    /**
      * Method responsible for control the refresh icon
      * @param refreshing - boolean
      */
